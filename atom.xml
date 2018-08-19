@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://igding.github.io/"/>
-  <updated>2018-08-12T17:46:41.049Z</updated>
+  <updated>2018-08-19T11:04:26.910Z</updated>
   <id>https://igding.github.io/</id>
   
   <author>
@@ -15,6 +15,28 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>序列化和反序列化</title>
+    <link href="https://igding.github.io/2018/08/19/%E5%BA%8F%E5%88%97%E5%8C%96%E5%92%8C%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/"/>
+    <id>https://igding.github.io/2018/08/19/序列化和反序列化/</id>
+    <published>2018-08-19T07:42:42.000Z</published>
+    <updated>2018-08-19T11:04:26.910Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>序列化 (Serialization)，实际上就是把对象的状态信息转换为可以存储或传输的形式的过程。进行数据传递时，必须要完成对象的序列化<br>运行时的对象状态转换成二进制，然后保存到流或者内存或者通过网络传输给其他端。<br>例如，通过将对象序列化到剪贴板，可在不同的应用程序之间共享对象。</p></blockquote><h3 id="1-Serializable接口"><a href="#1-Serializable接口" class="headerlink" title="1.Serializable接口"></a>1.Serializable接口</h3><h4 id="1-1-用法"><a href="#1-1-用法" class="headerlink" title="1.1 用法"></a>1.1 用法</h4><pre><code>a.直接实现这个接口。b.对象的序列化通过ObjectOutputStream.writeObject完成c.反序列化则是通过ObjectInputStream.readObject完成缺点是，两者不是同一个对象。</code></pre><h4 id="1-2-Serializable的缺点"><a href="#1-2-Serializable的缺点" class="headerlink" title="1.2 Serializable的缺点"></a>1.2 Serializable的缺点</h4><pre><code>整个对象都进行传递，开销很大，序列化和反序列化的过程需要大量的io操作。没必要</code></pre><h4 id="1-3-SerialVersionUID-序列化的标识"><a href="#1-3-SerialVersionUID-序列化的标识" class="headerlink" title="1.3 SerialVersionUID(序列化的标识)"></a>1.3 SerialVersionUID(序列化的标识)</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">UID的作用，就相当于一个tag，作为唯一标识，可以写成1L</span><br><span class="line">如果不写这个serialVersionUID(哈希值)，序列化的过程中没什么影响</span><br><span class="line">但是对反序列化readObject时会报错。</span><br><span class="line">eclipse会自动生成，而在as则不会。as的生成顺序</span><br><span class="line">preferences-&gt;Inspections-&gt;</span><br><span class="line">serialization issues-&gt;</span><br><span class="line">Serializable class without &apos;serialVersionUID&apos; 勾上确认就可以</span><br></pre></td></tr></table></figure><h5 id="1-3-1-详细的工作机制："><a href="#1-3-1-详细的工作机制：" class="headerlink" title="1.3.1 详细的工作机制："></a>1.3.1 详细的工作机制：</h5><pre><code>序列化的时候，系统将类的uid写入序列化文件。反序列化时，系统会检测UID，看与当前类的是否一致，一致的话，则    说明序列化的类版本和当前类的版本相同。这个时候就可以成功反序列化。</code></pre><h3 id="2-Android特有的序列化方式。Parcelable"><a href="#2-Android特有的序列化方式。Parcelable" class="headerlink" title="2.Android特有的序列化方式。Parcelable"></a>2.Android特有的序列化方式。Parcelable</h3><p>实现了Parcelable，就完成序列化，并通过intent和binder来传递。</p><pre><code>public class Student implements Parcelable {    String name;    String age;protected Student(Parcel in) {    name = in.readString();    age = in.readString();}//实现序列化@Overridepublic void writeToParcel(Parcel dest, int flags) {    //dest内部包装了可序列化的数据，可以在binder中传递    dest.writeString(name);    dest.writeString(age);}@Overridepublic int describeContents() {    return 0;}//反序列化功能，创建序列化对象和数组。public static final Creator&lt;Student&gt; CREATOR = new Creator&lt;Student&gt;() {    @Override    public Student createFromParcel(Parcel in) {        //in来实现反序列化。        return new Student(in);    }    @Override    public Student[] newArray(int size) {        return new Student[size];    }};}</code></pre><p>例如 Android底层 如intent，bundle，bitmap等，都是实现了序列化<br><img src="https://upload-images.jianshu.io/upload_images/3117705-f4d37e444b8729c2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="intent"></p><p><img src="https://upload-images.jianshu.io/upload_images/3117705-0626aa15be9d3823.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="bundle"></p><p><img src="https://upload-images.jianshu.io/upload_images/3117705-43f237bdb492061d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="bitmap"></p><p>同时list和map也可以序列化，前提是其子元素都是可序列化的。</p><h3 id="3、如何抉择"><a href="#3、如何抉择" class="headerlink" title="3、如何抉择"></a>3、如何抉择</h3><p>网络中传递对象或者进程中传递，如Activity之间传输数据，则用Parcelable更好，其底层是binder通信。</p><p>而作为永久存储对象的话，则还是建议用Serializable ，因为parcelable只是方便IPC，如果改变任何Parcel中数据的底层实现都可能导致之前的数据不可读取，所以此时还是建议使用Serializable。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;blockquote&gt;
+&lt;p&gt;序列化 (Serialization)，实际上就是把对象的状态信息转换为可以存储或传输的形式的过程。进行数据传递时，必须要完成对象的序列化&lt;br&gt;运行时的对象状态转换成二进制，然后保存到流或者内存或者通过网络传输给其他端。&lt;br&gt;例如，通过将对象序
+      
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>关于联网检测广播中弹窗所引发的思考</title>
@@ -224,28 +246,6 @@
   </entry>
   
   <entry>
-    <title>View的工作原理</title>
-    <link href="https://igding.github.io/2018/06/12/View%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/"/>
-    <id>https://igding.github.io/2018/06/12/View的工作原理/</id>
-    <published>2018-06-12T07:42:42.000Z</published>
-    <updated>2018-07-01T15:11:21.675Z</updated>
-    
-    <content type="html"><![CDATA[<p><a href="https://blog.csdn.net/qian520ao/article/details/78657084" target="_blank" rel="noopener">参考链接</a></p><p>ViewRootImpl：负责view的布局 测量 绘制</p><p>DecorView:<br>因为oncreate走完，仅仅只是资源的准备工作，实际view的绘制工作是在onresume()中进行的，同时，这里要看ActivityThread的handlerMessage()方法中的RESUME_ACTIVITY，会走handleResumeActivity()方法中，performResumeActivity()方法得到一个ActivityRecord</p><pre><code>  ViewManager wm = a.getWindowManager();  WindowManager.LayoutParams l = r.window.getAttributes();  a.mDecor = decor;  l.type = WindowManager.LayoutParams.TYPE_BASE_APPLICATION;  l.softInputMode |= forwardBit; if (r.mPreserveWindow) {     a.mWindowAdded = true;     r.mPreserveWindow = false;     ViewRootImpl impl = decor.getViewRootImpl();       if (impl != null) {          impl.notifyChildRebuilt();        }     }if (a.mVisibleFromClient) {    if (!a.mWindowAdded) {       a.mWindowAdded = true;       wm.addView(decor, l);//核心代码，l代表的是所有的资源和decorView添加到ViewManager </code></pre><p>wm是一个接口，接口addView,实际就要找到它的一个实现类，也就是WindowManagerGlobal中的addView()，只是这里运用到了一个设计模式，直接分析WindowManagerGlobal的addView即可</p><p>核心代码</p><pre><code>       //前面一堆系统调用和资源配置就忽略掉了，主要是以下代码       root = new ViewRootImpl(view.getContext(), display);       view.setLayoutParams(wparams);       mViews.add(view);//这三个add实际上是三个list       mRoots.add(root);       mParams.add(wparams);       root.setView(view, wparams, panelParentView);//核心代码ArrayList&lt;View&gt; mViews = new ArrayList&lt;View&gt;();ArrayList&lt;ViewRootImpl&gt; mRoots = new ArrayList&lt;ViewRootImpl&gt;();ArrayList&lt;WindowManager.LayoutParams&gt; mParams =new ArrayList&lt;WindowManager.LayoutParams&gt;();</code></pre><p>ViewRoot的setView()源码分析<br>内部主要有一个requestLayout() ==&gt; scheduleTraversals()==&gt; mChoreographer.postCallback(Choreographer.CALLBACK_TRAVERSAL, mTraversalRunnable, null);==&gt;实际上是调用了这个runable，而这个runable内部实际上是调用了doTraversal()方法</p><pre><code>final class TraversalRunnable implements Runnable {    @Override    public void run() {        doTraversal();    }}</code></pre><p>doTraversal中的核心方法是performTraversals();这里才正式开启了UI的绘制流程</p><p>WindowManage.LayoutParams，所有的资源都在这里<br>Rect frame 绘制了一个矩形。这个矩形并不是画布，而是意思大概就是，先确定他的整体位置</p><p>中间是一大堆比较恶心的计算。</p><p>下面，有一个测量方法performMeasure()，调用view的measure,再调用自身的onMeasure()方法<br>performLayout()布局==&gt;view的layout(),再调用自身的onLayout()；<br>performDraw()绘制==&gt;view的draw(),再调用自身的onDraw()；<br>draw中才会有surface画布，这个时候view才会显示出来</p><p>setContentView只是资源的准备<br>onresume才是真正的布局测量绘制</p><p>下一篇，对测量 布局 绘制流程的详细分析。</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;&lt;a href=&quot;https://blog.csdn.net/qian520ao/article/details/78657084&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;参考链接&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;ViewRootImpl：负责view的布局 
-      
-    
-    </summary>
-    
-    
-  </entry>
-  
-  <entry>
     <title>源码分析的方法</title>
     <link href="https://igding.github.io/2018/06/12/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E7%9A%84%E6%96%B9%E6%B3%95/"/>
     <id>https://igding.github.io/2018/06/12/源码分析的方法/</id>
@@ -270,29 +270,20 @@
   </entry>
   
   <entry>
-    <title>win7升级win10(简单高效无脑)</title>
-    <link href="https://igding.github.io/2018/03/23/win7%E5%8D%87%E7%BA%A7win10(%E7%AE%80%E5%8D%95%E9%AB%98%E6%95%88%E6%97%A0%E8%84%91)/"/>
-    <id>https://igding.github.io/2018/03/23/win7升级win10(简单高效无脑)/</id>
-    <published>2018-03-23T13:03:53.578Z</published>
-    <updated>2018-03-25T14:32:03.881Z</updated>
+    <title>View的工作原理</title>
+    <link href="https://igding.github.io/2018/06/12/View%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/"/>
+    <id>https://igding.github.io/2018/06/12/View的工作原理/</id>
+    <published>2018-06-12T07:42:42.000Z</published>
+    <updated>2018-07-01T15:11:21.675Z</updated>
     
-    <content type="html"><![CDATA[<pre><code>老王: win10现在还免费吗?  我: 免费的，免费的老王: 升了到底有啥好处呢？  我: 效率逼格就不说了，主要是默认保留原有文件和自带恢复出厂设置，以后就不需要为系统的事操心了。老王: 真能保存之前文件吗？不影响吗？  我: 是真的，是真的。不影响，不影响。众人: 我没有u盘，我怕装了出问题，就这样吧。太麻烦了，不想搞 我: 去去去，你们怕是个假程序猿。都说了是简单无脑高效。</code></pre><p>直接进入正题吧。</p><p>###提前准备工作：</p><p>1.<a href="https://download.microsoft.com/download/0/1/6/01677C03-1D89-49FD-B49B-87B0F36B00D1/Windows10Upgrade24074.exe" target="_blank" rel="noopener">微软官方的工具</a></p><pre><code>该链接目前没有公开，下载后无脑安装即可，记得电脑必须充电且联网，win10自动安装驱动。</code></pre><p>2.<a href="http://www.drvceo.com/" target="_blank" rel="noopener">微软官方的工具</a></p><pre><code>安装完系统之后，再来一发这个</code></pre><p>3.<a href="http://tieba.baidu.com/f?kw=windows10&amp;ie=utf-8&amp;tab=good" target="_blank" rel="noopener">参考链接  Windows10吧</a></p><p>4.U盘或者移动硬盘</p><pre><code>可有可无，以防万一</code></pre><blockquote><p>老王：可我习惯用老毛桃和大白菜。<br>我：请自行百度”老毛桃U盘制作后门”,“大白菜Ghost病毒”</p></blockquote><p>###具体操作流程</p><pre><code>无脑下一步,大概耗时1h</code></pre><h3 id="可能出现的问题："><a href="#可能出现的问题：" class="headerlink" title="可能出现的问题："></a>可能出现的问题：</h3><p>1.运行升级软件时，无法启动程序，计算机丢失api-ms-win-core-libraryloader-l1-1-1.dll</p><pre><code>将Windows10Upgrade的wimgapi.dll替换掉C:\Windows\System32\wimgapi.dll</code></pre><p>2.<a href="https://answers.microsoft.com/zh-hans/windows/forum/windows_10-update/win10%E9%87%8D%E7%BD%AE%E7%94%B5%E8%84%91%E6%97%B6/1e939a2d-a8c6-439f-9c45-b4bfdca78f32" target="_blank" rel="noopener">恢复出厂设置失败，window10 重置电脑未进行任何更改的问题</a></p><pre><code>记得以管理员权限运行cmd，命令copy即可，不要手动输入恢复出厂设置操作： “设置”-&gt;“恢复”-&gt;“重置此电脑（耗时1-2h）</code></pre><p>3.部分机型升级到win10后，无法直接恢复出厂设置</p><p>就只能用U盘了。可以用<a href="http://www.cfan.com.cn/2017/1026/129576.shtml" target="_blank" rel="noopener">系统自带磁盘管理</a>，开一个新的分区来安装win10，前提是U盘没有写入PE之类的东西</p><pre><code>1.压缩卷，用来分区 2.扩展卷，用来合并分区3.激活启动分区才能使用</code></pre><p>具体的过程就懒得写了。<br>注意以下几点：<br>1.先备份<br>2.安装的时候序列号不需要填<br>3.选择Windows10专业版<br><img src="http://upload-images.jianshu.io/upload_images/3117705-df293921168b75d2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p><pre><code>因为驱动器0是我自己的SSD ，驱动器1是机械硬盘，驱动器2是我的移动硬盘</code></pre><p>4.这一步的时候，把“驱动器为0”的都删了。选驱动器0进行安装，你们各自按照自己的来选择。</p><p>5.<img src="http://upload-images.jianshu.io/upload_images/3117705-1440a21ee459c294.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p><pre><code>选择左下角 脱机用户就是创建本地用户，随便写个账号。</code></pre><p>6.装完了再把D盘的Drvceo驱动装一下就OK了，大功告成</p><h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>无非就是备份，下载更新包，无脑下一步</p><p>中途出现的问题，直接Google就好了，一个个解决即可</p>]]></content>
+    <content type="html"><![CDATA[<p><a href="https://blog.csdn.net/qian520ao/article/details/78657084" target="_blank" rel="noopener">参考链接</a></p><p>ViewRootImpl：负责view的布局 测量 绘制</p><p>DecorView:<br>因为oncreate走完，仅仅只是资源的准备工作，实际view的绘制工作是在onresume()中进行的，同时，这里要看ActivityThread的handlerMessage()方法中的RESUME_ACTIVITY，会走handleResumeActivity()方法中，performResumeActivity()方法得到一个ActivityRecord</p><pre><code>  ViewManager wm = a.getWindowManager();  WindowManager.LayoutParams l = r.window.getAttributes();  a.mDecor = decor;  l.type = WindowManager.LayoutParams.TYPE_BASE_APPLICATION;  l.softInputMode |= forwardBit; if (r.mPreserveWindow) {     a.mWindowAdded = true;     r.mPreserveWindow = false;     ViewRootImpl impl = decor.getViewRootImpl();       if (impl != null) {          impl.notifyChildRebuilt();        }     }if (a.mVisibleFromClient) {    if (!a.mWindowAdded) {       a.mWindowAdded = true;       wm.addView(decor, l);//核心代码，l代表的是所有的资源和decorView添加到ViewManager </code></pre><p>wm是一个接口，接口addView,实际就要找到它的一个实现类，也就是WindowManagerGlobal中的addView()，只是这里运用到了一个设计模式，直接分析WindowManagerGlobal的addView即可</p><p>核心代码</p><pre><code>       //前面一堆系统调用和资源配置就忽略掉了，主要是以下代码       root = new ViewRootImpl(view.getContext(), display);       view.setLayoutParams(wparams);       mViews.add(view);//这三个add实际上是三个list       mRoots.add(root);       mParams.add(wparams);       root.setView(view, wparams, panelParentView);//核心代码ArrayList&lt;View&gt; mViews = new ArrayList&lt;View&gt;();ArrayList&lt;ViewRootImpl&gt; mRoots = new ArrayList&lt;ViewRootImpl&gt;();ArrayList&lt;WindowManager.LayoutParams&gt; mParams =new ArrayList&lt;WindowManager.LayoutParams&gt;();</code></pre><p>ViewRoot的setView()源码分析<br>内部主要有一个requestLayout() ==&gt; scheduleTraversals()==&gt; mChoreographer.postCallback(Choreographer.CALLBACK_TRAVERSAL, mTraversalRunnable, null);==&gt;实际上是调用了这个runable，而这个runable内部实际上是调用了doTraversal()方法</p><pre><code>final class TraversalRunnable implements Runnable {    @Override    public void run() {        doTraversal();    }}</code></pre><p>doTraversal中的核心方法是performTraversals();这里才正式开启了UI的绘制流程</p><p>WindowManage.LayoutParams，所有的资源都在这里<br>Rect frame 绘制了一个矩形。这个矩形并不是画布，而是意思大概就是，先确定他的整体位置</p><p>中间是一大堆比较恶心的计算。</p><p>下面，有一个测量方法performMeasure()，调用view的measure,再调用自身的onMeasure()方法<br>performLayout()布局==&gt;view的layout(),再调用自身的onLayout()；<br>performDraw()绘制==&gt;view的draw(),再调用自身的onDraw()；<br>draw中才会有surface画布，这个时候view才会显示出来</p><p>setContentView只是资源的准备<br>onresume才是真正的布局测量绘制</p><p>下一篇，对测量 布局 绘制流程的详细分析。</p>]]></content>
     
     <summary type="html">
     
       
       
-        &lt;pre&gt;&lt;code&gt;老王: win10现在还免费吗?
-
-  我: 免费的，免费的
-
-老王: 升了到底有啥好处呢？
-
-  我: 效率逼格就不说了，主要是默认保留原有文件和自带恢复出厂设置，以后就不需要为系统的事操心了。
-
-老王: 真能保存之前文件吗？不影响吗？
-
-  我: 是真的
+        &lt;p&gt;&lt;a href=&quot;https://blog.csdn.net/qian520ao/article/details/78657084&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;参考链接&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;ViewRootImpl：负责view的布局 
       
     
     </summary>
@@ -336,6 +327,37 @@
       
         &lt;p&gt;不擅长 长篇大论，直接以问题作为切入点来进行源码分析。&lt;/p&gt;
 &lt;p&gt;1.Java层的入口是main(),那么Android有没有main()？里面在做什么操作？&lt;br&gt;2.Android是如何启动的，Activity的生命周期是如何调用的？&lt;br&gt;3.setContent
+      
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>win7升级win10(简单高效无脑)</title>
+    <link href="https://igding.github.io/2018/03/23/win7%E5%8D%87%E7%BA%A7win10(%E7%AE%80%E5%8D%95%E9%AB%98%E6%95%88%E6%97%A0%E8%84%91)/"/>
+    <id>https://igding.github.io/2018/03/23/win7升级win10(简单高效无脑)/</id>
+    <published>2018-03-23T13:03:53.578Z</published>
+    <updated>2018-03-25T14:32:03.881Z</updated>
+    
+    <content type="html"><![CDATA[<pre><code>老王: win10现在还免费吗?  我: 免费的，免费的老王: 升了到底有啥好处呢？  我: 效率逼格就不说了，主要是默认保留原有文件和自带恢复出厂设置，以后就不需要为系统的事操心了。老王: 真能保存之前文件吗？不影响吗？  我: 是真的，是真的。不影响，不影响。众人: 我没有u盘，我怕装了出问题，就这样吧。太麻烦了，不想搞 我: 去去去，你们怕是个假程序猿。都说了是简单无脑高效。</code></pre><p>直接进入正题吧。</p><p>###提前准备工作：</p><p>1.<a href="https://download.microsoft.com/download/0/1/6/01677C03-1D89-49FD-B49B-87B0F36B00D1/Windows10Upgrade24074.exe" target="_blank" rel="noopener">微软官方的工具</a></p><pre><code>该链接目前没有公开，下载后无脑安装即可，记得电脑必须充电且联网，win10自动安装驱动。</code></pre><p>2.<a href="http://www.drvceo.com/" target="_blank" rel="noopener">微软官方的工具</a></p><pre><code>安装完系统之后，再来一发这个</code></pre><p>3.<a href="http://tieba.baidu.com/f?kw=windows10&amp;ie=utf-8&amp;tab=good" target="_blank" rel="noopener">参考链接  Windows10吧</a></p><p>4.U盘或者移动硬盘</p><pre><code>可有可无，以防万一</code></pre><blockquote><p>老王：可我习惯用老毛桃和大白菜。<br>我：请自行百度”老毛桃U盘制作后门”,“大白菜Ghost病毒”</p></blockquote><p>###具体操作流程</p><pre><code>无脑下一步,大概耗时1h</code></pre><h3 id="可能出现的问题："><a href="#可能出现的问题：" class="headerlink" title="可能出现的问题："></a>可能出现的问题：</h3><p>1.运行升级软件时，无法启动程序，计算机丢失api-ms-win-core-libraryloader-l1-1-1.dll</p><pre><code>将Windows10Upgrade的wimgapi.dll替换掉C:\Windows\System32\wimgapi.dll</code></pre><p>2.<a href="https://answers.microsoft.com/zh-hans/windows/forum/windows_10-update/win10%E9%87%8D%E7%BD%AE%E7%94%B5%E8%84%91%E6%97%B6/1e939a2d-a8c6-439f-9c45-b4bfdca78f32" target="_blank" rel="noopener">恢复出厂设置失败，window10 重置电脑未进行任何更改的问题</a></p><pre><code>记得以管理员权限运行cmd，命令copy即可，不要手动输入恢复出厂设置操作： “设置”-&gt;“恢复”-&gt;“重置此电脑（耗时1-2h）</code></pre><p>3.部分机型升级到win10后，无法直接恢复出厂设置</p><p>就只能用U盘了。可以用<a href="http://www.cfan.com.cn/2017/1026/129576.shtml" target="_blank" rel="noopener">系统自带磁盘管理</a>，开一个新的分区来安装win10，前提是U盘没有写入PE之类的东西</p><pre><code>1.压缩卷，用来分区 2.扩展卷，用来合并分区3.激活启动分区才能使用</code></pre><p>具体的过程就懒得写了。<br>注意以下几点：<br>1.先备份<br>2.安装的时候序列号不需要填<br>3.选择Windows10专业版<br><img src="http://upload-images.jianshu.io/upload_images/3117705-df293921168b75d2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p><pre><code>因为驱动器0是我自己的SSD ，驱动器1是机械硬盘，驱动器2是我的移动硬盘</code></pre><p>4.这一步的时候，把“驱动器为0”的都删了。选驱动器0进行安装，你们各自按照自己的来选择。</p><p>5.<img src="http://upload-images.jianshu.io/upload_images/3117705-1440a21ee459c294.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p><pre><code>选择左下角 脱机用户就是创建本地用户，随便写个账号。</code></pre><p>6.装完了再把D盘的Drvceo驱动装一下就OK了，大功告成</p><h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>无非就是备份，下载更新包，无脑下一步</p><p>中途出现的问题，直接Google就好了，一个个解决即可</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;pre&gt;&lt;code&gt;老王: win10现在还免费吗?
+
+  我: 免费的，免费的
+
+老王: 升了到底有啥好处呢？
+
+  我: 效率逼格就不说了，主要是默认保留原有文件和自带恢复出厂设置，以后就不需要为系统的事操心了。
+
+老王: 真能保存之前文件吗？不影响吗？
+
+  我: 是真的
       
     
     </summary>
