@@ -80,6 +80,8 @@
 
 
 
+  
+
 
   <link rel="alternate" href="/atom.xml" title="igding的博客" type="application/atom+xml">
 
@@ -98,7 +100,7 @@
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3117705-f4d37e444b8729c2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3117705-0626aa15be9d3823.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3117705-43f237bdb492061d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2018-08-19T11:04:26.910Z">
+<meta property="og:updated_time" content="2018-08-19T11:08:14.438Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="序列化和反序列化">
 <meta name="twitter:description" content="序列化 (Serialization)，实际上就是把对象的状态信息转换为可以存储或传输的形式的过程。进行数据传递时，必须要完成对象的序列化运行时的对象状态转换成二进制，然后保存到流或者内存或者通过网络传输给其他端。例如，通过将对象序列化到剪贴板，可在不同的应用程序之间共享对象。  1.Serializable接口1.1 用法a.直接实现这个接口。 b.对象的序列化通过ObjectOutputSt">
@@ -449,8 +451,8 @@ public static final Creator&lt;Student&gt; CREATOR = new Creator&lt;Student&gt;(
 <p><img src="https://upload-images.jianshu.io/upload_images/3117705-0626aa15be9d3823.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="bundle"></p>
 <p><img src="https://upload-images.jianshu.io/upload_images/3117705-43f237bdb492061d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="bitmap"></p>
 <p>同时list和map也可以序列化，前提是其子元素都是可序列化的。</p>
-<h3 id="3、如何抉择"><a href="#3、如何抉择" class="headerlink" title="3、如何抉择"></a>3、如何抉择</h3><p>网络中传递对象或者进程中传递，如Activity之间传输数据，则用Parcelable更好，其底层是binder通信。</p>
-<p>而作为永久存储对象的话，则还是建议用Serializable ，因为parcelable只是方便IPC，如果改变任何Parcel中数据的底层实现都可能导致之前的数据不可读取，所以此时还是建议使用Serializable。</p>
+<h3 id="3-如何抉择"><a href="#3-如何抉择" class="headerlink" title="3. 如何抉择"></a>3. 如何抉择</h3><p>网络中传递对象或者进程中传递，如Activity之间传输数据<br>则用Parcelable更好，其底层是binder通信。</p>
+<p>而作为永久存储对象的话，则还是建议用Serializable<br>因为parcelable只是方便IPC，如果改变任何Parcel中数据的底层实现都可能导致之前的数据不可读取，所以此时还是建议使用Serializable。</p>
       
     </div>
     
@@ -691,7 +693,7 @@ public static final Creator&lt;Student&gt; CREATOR = new Creator&lt;Student&gt;(
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Serializable接口"><span class="nav-number">1.</span> <span class="nav-text">1.Serializable接口</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-用法"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 用法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-Serializable的缺点"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 Serializable的缺点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-SerialVersionUID-序列化的标识"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 SerialVersionUID(序列化的标识)</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-3-1-详细的工作机制："><span class="nav-number">1.3.1.</span> <span class="nav-text">1.3.1 详细的工作机制：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Android特有的序列化方式。Parcelable"><span class="nav-number">2.</span> <span class="nav-text">2.Android特有的序列化方式。Parcelable</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、如何抉择"><span class="nav-number">3.</span> <span class="nav-text">3、如何抉择</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Serializable接口"><span class="nav-number">1.</span> <span class="nav-text">1.Serializable接口</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-用法"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 用法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-Serializable的缺点"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 Serializable的缺点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-SerialVersionUID-序列化的标识"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 SerialVersionUID(序列化的标识)</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-3-1-详细的工作机制："><span class="nav-number">1.3.1.</span> <span class="nav-text">1.3.1 详细的工作机制：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Android特有的序列化方式。Parcelable"><span class="nav-number">2.</span> <span class="nav-text">2.Android特有的序列化方式。Parcelable</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-如何抉择"><span class="nav-number">3.</span> <span class="nav-text">3. 如何抉择</span></a></li></ol></div>
             
 
           </div>

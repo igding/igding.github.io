@@ -776,7 +776,7 @@ view的绘制顺序是 measure layout draw。但是具体内部实现原理却�
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://igding.github.io/2018/06/12/setContentView源码分析/">
+    <link itemprop="mainEntityOfPage" href="https://igding.github.io/2018/06/12/View的工作原理/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="igding">
@@ -795,7 +795,7 @@ view的绘制顺序是 measure layout draw。但是具体内部实现原理却�
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/06/12/setContentView源码分析/" itemprop="url">setContentView源码分析</a></h1>
+                <a class="post-title-link" href="/2018/06/12/View的工作原理/" itemprop="url">View的工作原理</a></h1>
         
 
         <div class="post-meta">
@@ -839,7 +839,7 @@ view的绘制顺序是 measure layout draw。但是具体内部实现原理却�
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  508
+                  518
                 </span>
               
 
@@ -878,15 +878,13 @@ view的绘制顺序是 measure layout draw。但是具体内部实现原理却�
       
         
           
-          ViewRoot 继承自framelayout, 根布局WindowDecorView
- public void setContentView(@LayoutRes int layoutResID) {
-    getWindow().setContentView(layoutResID);//实际上是getWindow()在调用，
-
-    initWindowDecorActionBar();
+          参考链接
+ViewRootImpl：负责view的布局 测量 绘制
+DecorView:因为oncreate走完，仅仅只是资源的准备工作，实际view的绘制工作是在onresume()中进行的，同时，这里要看ActivityThread的handlerMessage()方法中的RESUME_ACTIVITY，会走handleResumeActivity()方法中，performResumeActi
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/06/12/setContentView源码分析/#more" rel="contents">
+            <a class="btn" href="/2018/06/12/View的工作原理/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -937,7 +935,7 @@ view的绘制顺序是 measure layout draw。但是具体内部实现原理却�
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://igding.github.io/2018/06/12/Handler源码分析/">
+    <link itemprop="mainEntityOfPage" href="https://igding.github.io/2018/06/12/源码分析的方法/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="igding">
@@ -956,7 +954,7 @@ view的绘制顺序是 measure layout draw。但是具体内部实现原理却�
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/06/12/Handler源码分析/" itemprop="url">Handler源码分析</a></h1>
+                <a class="post-title-link" href="/2018/06/12/源码分析的方法/" itemprop="url">源码分析的方法</a></h1>
         
 
         <div class="post-meta">
@@ -1000,7 +998,7 @@ view的绘制顺序是 measure layout draw。但是具体内部实现原理却�
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  2,839
+                  405
                 </span>
               
 
@@ -1016,7 +1014,7 @@ view的绘制顺序是 measure layout draw。但是具体内部实现原理却�
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  13
+                  1
                 </span>
               
             </div>
@@ -1040,13 +1038,18 @@ view的绘制顺序是 measure layout draw。但是具体内部实现原理却�
         
           
           
-不太喜欢长篇大论和裹脚布般的源码分析，经常看到很多博主冷不丁的就冒出来几个新词汇，然后一股脑就钻到代码细节上，搞的人很懵逼，习惯性的吐槽和无可奈何的强迫式专研，终才搞懂。但是即便懂了，再回头看原先的部分文章，还是忍不住吐槽。直到某一天，鸡排大佬的一句:”你行你上” 点醒了我，于是乎，就开始自己来折腾。
+本人水平有限，以下内容只能作为探讨和交流，如果有错误或者不足的地方，还请指正，相互学习。
 
-1不仅仅只做源码分析和流程总结，最好是把核心流程动手敲一遍，结合设计模式思考这样设计的优缺点
+准备工作：SDK版本Android-27
+修改sdk的jar包Android Studio中双击shift，输入sdkManager,找到sdk路径
+copy路径，放入对应sdk下 覆盖jar包即可
+
+
+注意事项：1.最好只操作27版本的，其他版本暂时不清楚会不会出问题2.不会影响公司项目，这只是工具层的
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/06/12/Handler源码分析/#more" rel="contents">
+            <a class="btn" href="/2018/06/12/源码分析的方法/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
