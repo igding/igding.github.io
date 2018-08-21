@@ -90,18 +90,18 @@
 
 
 
-<meta name="description" content="对于强迫症患者来说，一大堆拥挤的xml文件，肯定是让人看的不舒服的，学习到一种有效管理xml的方式，供参考   其实就是七个步骤  切换Project  原有的layout文件都备份到其他文件夹，并删除  New ==&amp;gt; directory 创建立一级目录 命名无所谓，但是要和gradle中的src/main/res下的名字保持一致   4.创建多个二级目录，同样需要名字保持一致 5.每个">
+<meta name="description" content="对于强迫症患者来说，一大堆拥挤的xml文件，肯定是让人看的不舒服的，学习到一种有效管理xml的方式，供参考   其实就是七个步骤  切换Project  原有的layout文件都备份到其他文件夹，并删除  New ==&amp;gt; directory 创建立一级目录 命名无所谓，但是要和gradle中的src/main/res下的名字保持一致  创建多个二级目录，同样需要名字保持一致  每个二级目录">
 <meta property="og:type" content="article">
 <meta property="og:title" content="分类整理layout布局文件">
 <meta property="og:url" content="https://igding.github.io/2018/08/20/分类整理layout布局文件/index.html">
 <meta property="og:site_name" content="igding的博客">
-<meta property="og:description" content="对于强迫症患者来说，一大堆拥挤的xml文件，肯定是让人看的不舒服的，学习到一种有效管理xml的方式，供参考   其实就是七个步骤  切换Project  原有的layout文件都备份到其他文件夹，并删除  New ==&amp;gt; directory 创建立一级目录 命名无所谓，但是要和gradle中的src/main/res下的名字保持一致   4.创建多个二级目录，同样需要名字保持一致 5.每个">
+<meta property="og:description" content="对于强迫症患者来说，一大堆拥挤的xml文件，肯定是让人看的不舒服的，学习到一种有效管理xml的方式，供参考   其实就是七个步骤  切换Project  原有的layout文件都备份到其他文件夹，并删除  New ==&amp;gt; directory 创建立一级目录 命名无所谓，但是要和gradle中的src/main/res下的名字保持一致  创建多个二级目录，同样需要名字保持一致  每个二级目录">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3117705-53d16904281265c2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2018-08-21T15:00:17.539Z">
+<meta property="og:updated_time" content="2018-08-21T15:02:21.359Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="分类整理layout布局文件">
-<meta name="twitter:description" content="对于强迫症患者来说，一大堆拥挤的xml文件，肯定是让人看的不舒服的，学习到一种有效管理xml的方式，供参考   其实就是七个步骤  切换Project  原有的layout文件都备份到其他文件夹，并删除  New ==&amp;gt; directory 创建立一级目录 命名无所谓，但是要和gradle中的src/main/res下的名字保持一致   4.创建多个二级目录，同样需要名字保持一致 5.每个">
+<meta name="twitter:description" content="对于强迫症患者来说，一大堆拥挤的xml文件，肯定是让人看的不舒服的，学习到一种有效管理xml的方式，供参考   其实就是七个步骤  切换Project  原有的layout文件都备份到其他文件夹，并删除  New ==&amp;gt; directory 创建立一级目录 命名无所谓，但是要和gradle中的src/main/res下的名字保持一致  创建多个二级目录，同样需要名字保持一致  每个二级目录">
 <meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/3117705-53d16904281265c2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 
 
@@ -410,11 +410,14 @@
 </li>
 <li><p>New ==&gt; directory 创建立一级目录<br> 命名无所谓，但是要和gradle中的src/main/res下的名字保持一致</p>
 </li>
+<li><p>创建多个二级目录，同样需要名字保持一致</p>
+</li>
+<li><p>每个二级目录下，必须都要创建一个layout文件夹</p>
+</li>
 </ol>
-<p>4.创建多个二级目录，同样需要名字保持一致</p>
-<p>5.每个二级目录下，必须都要创建一个layout文件夹</p>
 <p>注意:在AS中创建的话，会出现layouts. fragment.layout的格式，而不是树形结构，建议就在电脑的中手动新建文件夹</p>
-<p>6.在gradle中android标签内 加入如下代码</p>
+<ol>
+<li><p>在gradle中android标签内 加入如下代码</p>
 <pre><code>sourceSets {
   main {
       res.srcDirs =
@@ -430,10 +433,17 @@
               ]
         }
   }
-</code></pre><p>这里注意<br>a.命名，可参照我的图来操作。<br>b.一定要把 src/main/res/layouts  和 src/main/res 写在最后面</p>
-<p>7.sync now就可以了。xml的用法和以前是一样的，只不过结构改了而已</p>
-<p>如有报错，请检查以下两点<br>1.Duplicate file  重复文件<br>2.每个二级目录下的layout没有创建</p>
-<p>file grouping插件是可以自动生成，但是as版本升级之后，貌似有bug，不能用，作者也没维护了</p>
+</code></pre><p> 这里注意</p>
+<pre><code>a.命名，可参照我的图来操作。
+b.一定要把 src/main/res/layouts  和 src/main/res 写在最后面
+</code></pre></li>
+<li><p>sync now就可以了。xml的用法和以前是一样的，只不过结构改了而已</p>
+<p> 如有报错，请检查以下两点</p>
+<pre><code>1.Duplicate file  重复文件
+2.每个二级目录下的layout没有创建
+file grouping插件是可以自动生成，但是as版本升级之后，貌似有bug，不能用，作者也没维护了
+</code></pre></li>
+</ol>
       
     </div>
     
