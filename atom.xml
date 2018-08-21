@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://igding.github.io/"/>
-  <updated>2018-08-21T15:03:37.454Z</updated>
+  <updated>2018-08-21T15:04:48.419Z</updated>
   <id>https://igding.github.io/</id>
   
   <author>
@@ -21,9 +21,9 @@
     <link href="https://igding.github.io/2018/08/20/%E5%88%86%E7%B1%BB%E6%95%B4%E7%90%86layout%E5%B8%83%E5%B1%80%E6%96%87%E4%BB%B6/"/>
     <id>https://igding.github.io/2018/08/20/分类整理layout布局文件/</id>
     <published>2018-08-20T15:00:00.000Z</published>
-    <updated>2018-08-21T15:03:37.454Z</updated>
+    <updated>2018-08-21T15:04:48.419Z</updated>
     
-    <content type="html"><![CDATA[<blockquote><p>对于强迫症患者来说，一大堆拥挤的xml文件，肯定是让人看的不舒服的，学习到一种有效管理xml的方式，供参考</p></blockquote><p><img src="https://upload-images.jianshu.io/upload_images/3117705-53d16904281265c2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="分类管理"></p><p>其实就是七个步骤</p><ol><li><p>切换Project</p></li><li><p>原有的layout文件都备份到其他文件夹，并删除</p></li><li><p>New ==&gt; directory 创建立一级目录<br> 命名无所谓，但是要和gradle中的src/main/res下的名字保持一致</p></li><li><p>创建多个二级目录，同样需要名字保持一致</p></li><li><p>每个二级目录下，必须都要创建一个layout文件夹</p><pre><code>注意:在AS中创建的话，会出现layouts. fragment.layout的格式，而不是树形结构，建议就在电脑的中手动新建文件夹</code></pre></li><li><p>在gradle中android标签内 加入如下代码</p><pre><code>sourceSets {  main {      res.srcDirs =              [                      &apos;src/main/res/layouts/fragment&apos;,                      &apos;src/main/res/layouts/activity&apos;,                      &apos;src/main/res/layouts/dialog&apos;,                      &apos;src/main/res/layouts/items&apos;,                      &apos;src/main/res/layouts/toolbar&apos;,                      &apos;src/main/res/layouts/nodata&apos;,                      &apos;src/main/res/layouts&apos;,                      &apos;src/main/res&apos;              ]        }  }这里注意    a.命名，可参照我的图来操作。    b.一定要把 src/main/res/layouts  和 src/main/res 写在最后面</code></pre></li><li><p>sync now就可以了。xml的用法和以前是一样的，只不过结构改了而已</p><pre><code>如有报错，请检查以下两点    1.Duplicate file  重复文件    2.每个二级目录下的layout没有创建    file grouping插件是可以自动生成，但是as版本升级之后，貌似有bug，不能用，作者也没维护了</code></pre></li></ol>]]></content>
+    <content type="html"><![CDATA[<blockquote><p>对于强迫症患者来说，一大堆拥挤的xml文件，肯定是让人看的不舒服的，学习到一种有效管理xml的方式，供参考</p></blockquote><p><img src="https://upload-images.jianshu.io/upload_images/3117705-53d16904281265c2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="分类管理"></p><p>其实就是七个步骤</p><ol><li><p>切换Project</p></li><li><p>原有的layout文件都备份到其他文件夹，并删除</p></li><li><p>New ==&gt; directory 创建立一级目录<br> 命名无所谓，但是要和gradle中的src/main/res下的名字保持一致</p></li><li><p>创建多个二级目录，同样需要名字保持一致</p></li><li><p>每个二级目录下，必须都要创建一个layout文件夹</p><pre><code>注意:在AS中创建的话，会出现layouts. fragment.layout的格式，而不是树形结构，建议就在电脑的中手动新建文件夹</code></pre></li><li><p>在gradle中android标签内 加入如下代码</p><pre><code>sourceSets {  main {      res.srcDirs =              [                      &apos;src/main/res/layouts/fragment&apos;,                      &apos;src/main/res/layouts/activity&apos;,                      &apos;src/main/res/layouts/dialog&apos;,                      &apos;src/main/res/layouts/items&apos;,                      &apos;src/main/res/layouts/toolbar&apos;,                      &apos;src/main/res/layouts/nodata&apos;,                      &apos;src/main/res/layouts&apos;,                      &apos;src/main/res&apos;              ]        }  }这里注意    a.命名，可参照我的图来操作。    b.一定要把 src/main/res/layouts  和 src/main/res 写在最后面</code></pre></li><li><p>sync now就可以了。xml的用法和以前是一样的，只不过结构改了而已</p><pre><code>如有报错，请检查以下两点    1.Duplicate file  重复文件    2.每个二级目录下的layout没有创建    file grouping插件是可以自动生成，但是as版本升级之后，貌似有bug    不能用，作者也没维护了</code></pre></li></ol>]]></content>
     
     <summary type="html">
     
