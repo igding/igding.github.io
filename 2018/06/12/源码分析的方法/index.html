@@ -88,20 +88,20 @@
 
 
 
-<meta name="description" content="本人水平有限，以下内容只能作为探讨和交流，如果有错误或者不足的地方，还请指正，相互学习。  准备工作：SDK版本Android-27 修改sdk的jar包Android Studio中双击shift，输入sdkManager,找到sdk路径 copy路径，放入对应sdk下 覆盖jar包即可   注意事项：1.最好只操作27版本的，其他版本暂时不清楚会不会出问题2.不会影响公司项目，这只是工具层的">
+<meta name="description" content="本人水平有限，以下内容只能作为探讨和交流，如果有错误或者不足的地方，还请指正，相互学习。  准备工作：SDK版本Android-27    还需要修改导入的包  implementation ‘com.android.support:appcompat-v7:27.1.0’ 修改sdk的jar包Android Studio中双击shift，输入sdkManager,找到sdk路径 copy路径，">
 <meta property="og:type" content="article">
 <meta property="og:title" content="源码分析的方法">
 <meta property="og:url" content="https://igding.github.io/2018/06/12/源码分析的方法/index.html">
 <meta property="og:site_name" content="igding的博客">
-<meta property="og:description" content="本人水平有限，以下内容只能作为探讨和交流，如果有错误或者不足的地方，还请指正，相互学习。  准备工作：SDK版本Android-27 修改sdk的jar包Android Studio中双击shift，输入sdkManager,找到sdk路径 copy路径，放入对应sdk下 覆盖jar包即可   注意事项：1.最好只操作27版本的，其他版本暂时不清楚会不会出问题2.不会影响公司项目，这只是工具层的">
+<meta property="og:description" content="本人水平有限，以下内容只能作为探讨和交流，如果有错误或者不足的地方，还请指正，相互学习。  准备工作：SDK版本Android-27    还需要修改导入的包  implementation ‘com.android.support:appcompat-v7:27.1.0’ 修改sdk的jar包Android Studio中双击shift，输入sdkManager,找到sdk路径 copy路径，">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3117705-9747fe3d3945b59a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3117705-4abe58be869fee78.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3117705-124df15d4a35267e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2018-06-13T03:06:39.340Z">
+<meta property="og:updated_time" content="2018-09-02T07:48:57.836Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="源码分析的方法">
-<meta name="twitter:description" content="本人水平有限，以下内容只能作为探讨和交流，如果有错误或者不足的地方，还请指正，相互学习。  准备工作：SDK版本Android-27 修改sdk的jar包Android Studio中双击shift，输入sdkManager,找到sdk路径 copy路径，放入对应sdk下 覆盖jar包即可   注意事项：1.最好只操作27版本的，其他版本暂时不清楚会不会出问题2.不会影响公司项目，这只是工具层的">
+<meta name="twitter:description" content="本人水平有限，以下内容只能作为探讨和交流，如果有错误或者不足的地方，还请指正，相互学习。  准备工作：SDK版本Android-27    还需要修改导入的包  implementation ‘com.android.support:appcompat-v7:27.1.0’ 修改sdk的jar包Android Studio中双击shift，输入sdkManager,找到sdk路径 copy路径，">
 <meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/3117705-9747fe3d3945b59a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 
 
@@ -361,7 +361,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  405
+                  423
                 </span>
               
 
@@ -377,7 +377,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  1
+                  2
                 </span>
               
             </div>
@@ -401,7 +401,7 @@
         <blockquote>
 <p>本人水平有限，以下内容只能作为探讨和交流，如果有错误或者不足的地方，还请指正，相互学习。</p>
 </blockquote>
-<h2 id="准备工作："><a href="#准备工作：" class="headerlink" title="准备工作："></a>准备工作：</h2><h3 id="SDK版本Android-27"><a href="#SDK版本Android-27" class="headerlink" title="SDK版本Android-27"></a>SDK版本Android-27</h3><p><img src="https://upload-images.jianshu.io/upload_images/3117705-9747fe3d3945b59a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<h2 id="准备工作："><a href="#准备工作：" class="headerlink" title="准备工作："></a>准备工作：</h2><h3 id="SDK版本Android-27"><a href="#SDK版本Android-27" class="headerlink" title="SDK版本Android-27"></a>SDK版本Android-27</h3><p><img src="https://upload-images.jianshu.io/upload_images/3117705-9747fe3d3945b59a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>    还需要修改导入的包  implementation ‘com.android.support:appcompat-v7:27.1.0’</p>
 <h3 id="修改sdk的jar包"><a href="#修改sdk的jar包" class="headerlink" title="修改sdk的jar包"></a><a href="https://pan.baidu.com/s/1f9xxwmJR28_QfwA89AZSRg" target="_blank" rel="noopener">修改sdk的jar包</a></h3><p>Android Studio中双击shift，输入sdkManager,找到sdk路径<br><img src="https://upload-images.jianshu.io/upload_images/3117705-4abe58be869fee78.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
 <p>copy路径，放入对应sdk下 覆盖jar包即可</p>
 <p><img src="https://upload-images.jianshu.io/upload_images/3117705-124df15d4a35267e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
@@ -499,8 +499,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/03/23/APP部分启动过程与Activity的生命周期调用过程/" rel="next" title="APP部分启动过程与Activity的生命周期调用过程">
-                <i class="fa fa-chevron-left"></i> APP部分启动过程与Activity的生命周期调用过程
+              <a href="/2018/06/12/setContentView源码分析/" rel="next" title="setContentView源码分析">
+                <i class="fa fa-chevron-left"></i> setContentView源码分析
               </a>
             
           </div>
@@ -595,7 +595,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-count">17</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -693,7 +693,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">17.1k</span>
+    <span title="Site words total count">17.4k</span>
   
 </div>
 

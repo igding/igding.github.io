@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://igding.github.io/"/>
-  <updated>2018-08-21T15:04:48.419Z</updated>
+  <updated>2018-09-02T09:52:44.102Z</updated>
   <id>https://igding.github.io/</id>
   
   <author>
@@ -15,6 +15,28 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Android隐藏api如何调用</title>
+    <link href="https://igding.github.io/2018/09/02/Android%E9%9A%90%E8%97%8Fapi%E5%A6%82%E4%BD%95%E8%B0%83%E7%94%A8/"/>
+    <id>https://igding.github.io/2018/09/02/Android隐藏api如何调用/</id>
+    <published>2018-09-02T09:52:00.000Z</published>
+    <updated>2018-09-02T09:52:44.102Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>编译时的jar(sdk/platforms/androidversion/android.jar)属于阉割版，它去掉了带有@hide的类和internal包下的类<br>而运行时，系统会调用android设备中完整版的jar(/system/framework/framework.jar)</p></blockquote><h3 id="1-哪些api不能直接调用？"><a href="#1-哪些api不能直接调用？" class="headerlink" title="1.哪些api不能直接调用？"></a>1.哪些api不能直接调用？</h3><pre><code>1.com.android.internal 包下的 API（internal API） 2.被标记为 @hide 属性的类和方法的隐藏API(hidden API)</code></pre><h3 id="2-Google设置隐藏类和internal包不能调用的原因"><a href="#2-Google设置隐藏类和internal包不能调用的原因" class="headerlink" title="2.Google设置隐藏类和internal包不能调用的原因"></a>2.Google设置隐藏类和internal包不能调用的原因</h3><pre><code>1.api属于内部逻辑，不想对外开发2.可能存在着低版本和高版本之间的兼容性问题，不对外开发3.也有可能是api的接口未确定下来。</code></pre><h3 id="3-如何使用这些api"><a href="#3-如何使用这些api" class="headerlink" title="3.如何使用这些api"></a>3.如何使用这些api</h3><h3 id="3-1-反射-具体调用，略"><a href="#3-1-反射-具体调用，略" class="headerlink" title="3.1.反射(具体调用，略)"></a>3.1.反射(具体调用，略)</h3><h3 id="3-1-1为什么可以通过反射来调用？"><a href="#3-1-1为什么可以通过反射来调用？" class="headerlink" title="3.1.1为什么可以通过反射来调用？"></a>3.1.1为什么可以通过反射来调用？</h3><pre><code>因为编译时，调用的sdk是android.jar，移除了internal API 和 hidden API而运行时它会加载 /system/framework/framework.jar，它没有移除也就是说我们编译时的SDK中不包含这些API，所以无法进行调用当我们利用反射，程序在设备上运行的时候，其实是可以找到对应的方法进行调用的。</code></pre><h3 id="3-2-替换jar包"><a href="#3-2-替换jar包" class="headerlink" title="3.2.替换jar包"></a>3.2.<a href="https://github.com/anggrayudi/android-hidden-api" target="_blank" rel="noopener">替换jar包</a></h3><p><img src="https://upload-images.jianshu.io/upload_images/3117705-752ce8b427cd9291.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="阉割版的jar包"></p><p><img src="https://upload-images.jianshu.io/upload_images/3117705-0363c8cb4e0e4212.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p><p>具体操作，照着GitHub导入依赖即可。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;blockquote&gt;
+&lt;p&gt;编译时的jar(sdk/platforms/androidversion/android.jar)属于阉割版，它去掉了带有@hide的类和internal包下的类&lt;br&gt;而运行时，系统会调用android设备中完整版的jar(/system/fra
+      
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>分类整理layout布局文件</title>
@@ -247,29 +269,6 @@
   </entry>
   
   <entry>
-    <title>setContentView源码分析</title>
-    <link href="https://igding.github.io/2018/06/12/setContentView%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
-    <id>https://igding.github.io/2018/06/12/setContentView源码分析/</id>
-    <published>2018-06-12T07:42:42.000Z</published>
-    <updated>2018-06-15T09:56:44.947Z</updated>
-    
-    <content type="html"><![CDATA[<p>ViewRoot 继承自framelayout, 根布局<br>Window<br>DecorView</p><pre><code> public void setContentView(@LayoutRes int layoutResID) {    getWindow().setContentView(layoutResID);//实际上是getWindow()在调用，    initWindowDecorActionBar();//设置ActionBar(不包含状态栏)} public Window getWindow() {    return mWindow;}// Window类的注释代码only existing implementation is PhoneWindow public abstract class Window {//唯一的实现类是PhoneWindow}</code></pre><p>PhoneWindow的setContentView核心源码</p><pre><code>  if (mContentParent == null) {//mContentParent是viewgroup      installDecor();//初始化Decor  } //设置我们的布局填充到mContentParentmLayoutInflater.inflate(layoutResID, mContentParent);</code></pre><p>这段代码说明了，实际上我们的布局文件之上，还有一个父容器viewgroup</p><pre><code>private void installDecor() {   if (mDecor == null) {       mDecor = generateDecor(-1);//创建一个DecorView       //设置的属性和动画效果直接忽略   else {       mDecor.setWindow(this);//DecorView设置一个window   }   if (mContentParent == null) {       mContentParent = generateLayout(mDecor);     //如果viewgroup为空，则生成一个layout</code></pre><p> generateDecor源码分析</p><pre><code>protected DecorView generateDecor(int featureId) {    //内部就是new了一个DecorView。    return new DecorView(context, featureId, this, getAttributes());}</code></pre><p>generateLayout()源码分析</p><blockquote><p>generateLayout内部实际上就是在setFlags和setLayout和style和requestFeature()和动画一系列的操作最终就是在创建一个DecorView。同时，也印证了，在设置getWindow.requestFeature时，为什么要设置在setContentView()之前，因为这些在之前就已经设置了。最后是会根据不同的状态去加载不同的布局</p></blockquote><p><img src="https://upload-images.jianshu.io/upload_images/3117705-a444441d4d1a35b8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p><pre><code>//最后会加载layoutResourcemDecor.onResourcesLoaded(mLayoutInflater, layoutResource);</code></pre><p>onResourcesLoaded内部实际上就是把layoutResource填充进来</p><pre><code>void onResourcesLoaded(LayoutInflater inflater, int layoutResource) {      final View root = inflater.inflate(layoutResource, null);}</code></pre><p>创建完父容器之后，再去填充我们自己的布局，底层是用的xml解析，解析过程(略)。</p><p>也就是说，setContentView()实际上就是两步<br>1.加载父容器(包括各种style和各类资源等)，<br>2.加载自身布局</p><p>但是这里仅仅只是加载，正如我们最初在学activity生命周期时，很明确的说明，oncreate()只是在准备阶段，加载资源文件，也就是说，没有将view添加到window。因为oncrete中setContentView()仅仅只是资源准备阶段，只有当ActivityThread执行onReLauchActivity时，也就是onResume()方法时，才会将view添加到window中</p><p><img src="https://upload-images.jianshu.io/upload_images/3117705-d5345a767c2b0d0b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p><p>下一篇，将会讲解，DecorView是如何添加到窗口window的源码分析</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;ViewRoot 继承自framelayout, 根布局&lt;br&gt;Window&lt;br&gt;DecorView&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt; public void setContentView(@LayoutRes int layoutResID) {
-    getWindo
-      
-    
-    </summary>
-    
-    
-  </entry>
-  
-  <entry>
     <title>View的工作原理</title>
     <link href="https://igding.github.io/2018/06/12/View%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/"/>
     <id>https://igding.github.io/2018/06/12/View的工作原理/</id>
@@ -296,9 +295,9 @@
     <link href="https://igding.github.io/2018/06/12/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E7%9A%84%E6%96%B9%E6%B3%95/"/>
     <id>https://igding.github.io/2018/06/12/源码分析的方法/</id>
     <published>2018-06-12T07:42:42.000Z</published>
-    <updated>2018-06-13T03:06:39.340Z</updated>
+    <updated>2018-09-02T07:48:57.836Z</updated>
     
-    <content type="html"><![CDATA[<blockquote><p>本人水平有限，以下内容只能作为探讨和交流，如果有错误或者不足的地方，还请指正，相互学习。</p></blockquote><h2 id="准备工作："><a href="#准备工作：" class="headerlink" title="准备工作："></a>准备工作：</h2><h3 id="SDK版本Android-27"><a href="#SDK版本Android-27" class="headerlink" title="SDK版本Android-27"></a>SDK版本Android-27</h3><p><img src="https://upload-images.jianshu.io/upload_images/3117705-9747fe3d3945b59a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p><h3 id="修改sdk的jar包"><a href="#修改sdk的jar包" class="headerlink" title="修改sdk的jar包"></a><a href="https://pan.baidu.com/s/1f9xxwmJR28_QfwA89AZSRg" target="_blank" rel="noopener">修改sdk的jar包</a></h3><p>Android Studio中双击shift，输入sdkManager,找到sdk路径<br><img src="https://upload-images.jianshu.io/upload_images/3117705-4abe58be869fee78.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p><p>copy路径，放入对应sdk下 覆盖jar包即可</p><p><img src="https://upload-images.jianshu.io/upload_images/3117705-124df15d4a35267e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p><blockquote><p>注意事项：<br>1.最好只操作27版本的，其他版本暂时不清楚会不会出问题<br>2.不会影响公司项目，这只是工具层的东西，不是编译层<br>3.当然你也可以用<a href="https://www.jianshu.com/p/c82817feba38" target="_blank" rel="noopener">Source Insight或者在线阅读源码</a>，我暂时不太习惯</p></blockquote><h2 id="心德"><a href="#心德" class="headerlink" title="心德"></a>心德</h2><h3 id="1-借助博客，多看几篇，了解初步原理和大概的用处"><a href="#1-借助博客，多看几篇，了解初步原理和大概的用处" class="headerlink" title="1.借助博客，多看几篇，了解初步原理和大概的用处"></a>1.借助博客，多看几篇，了解初步原理和大概的用处</h3><h3 id="2-xmind和uml帮助理解，掌握全局性的流程"><a href="#2-xmind和uml帮助理解，掌握全局性的流程" class="headerlink" title="2.xmind和uml帮助理解，掌握全局性的流程"></a>2.xmind和uml帮助理解，掌握全局性的流程</h3><h3 id="3-以基础api或者面试题作为切入点，带着问题看"><a href="#3-以基础api或者面试题作为切入点，带着问题看" class="headerlink" title="3.以基础api或者面试题作为切入点，带着问题看"></a>3.以基础api或者面试题作为切入点，带着问题看</h3><h3 id="4-只看关键代码和注释，分析对象之间的关系"><a href="#4-只看关键代码和注释，分析对象之间的关系" class="headerlink" title="4.只看关键代码和注释，分析对象之间的关系"></a>4.只看关键代码和注释，分析对象之间的关系</h3><h3 id="5-结合设计模式思考为什么这样设计，解决了什么问题"><a href="#5-结合设计模式思考为什么这样设计，解决了什么问题" class="headerlink" title="5.结合设计模式思考为什么这样设计，解决了什么问题"></a>5.结合设计模式思考为什么这样设计，解决了什么问题</h3><h3 id="6-书籍-艺术探索，进阶之光，源码解析与实战"><a href="#6-书籍-艺术探索，进阶之光，源码解析与实战" class="headerlink" title="6.书籍 艺术探索，进阶之光，源码解析与实战"></a>6.书籍 艺术探索，进阶之光，源码解析与实战</h3><h3 id="7-在此应用场景下，优缺点是什么，最好是自己来手写一遍-只用写主要的功能，去除细枝末节"><a href="#7-在此应用场景下，优缺点是什么，最好是自己来手写一遍-只用写主要的功能，去除细枝末节" class="headerlink" title="7.在此应用场景下，优缺点是什么，最好是自己来手写一遍(只用写主要的功能，去除细枝末节)"></a>7.在此应用场景下，优缺点是什么，最好是自己来手写一遍(只用写主要的功能，去除细枝末节)</h3><h3 id="8-忘了也不要紧，写博客详细记录自己的分析过程，到时候回顾起来很方便"><a href="#8-忘了也不要紧，写博客详细记录自己的分析过程，到时候回顾起来很方便" class="headerlink" title="8.忘了也不要紧，写博客详细记录自己的分析过程，到时候回顾起来很方便"></a>8.忘了也不要紧，写博客详细记录自己的分析过程，到时候回顾起来很方便</h3><pre><code>本人方面，也只是在实践的过程当中。有待提高</code></pre><p>光说不练假把式，接下来我会以新手的身份，重新学习Android，并整理出自己的知识体系。</p><p>下一篇 Activity启动流程</p>]]></content>
+    <content type="html"><![CDATA[<blockquote><p>本人水平有限，以下内容只能作为探讨和交流，如果有错误或者不足的地方，还请指正，相互学习。</p></blockquote><h2 id="准备工作："><a href="#准备工作：" class="headerlink" title="准备工作："></a>准备工作：</h2><h3 id="SDK版本Android-27"><a href="#SDK版本Android-27" class="headerlink" title="SDK版本Android-27"></a>SDK版本Android-27</h3><p><img src="https://upload-images.jianshu.io/upload_images/3117705-9747fe3d3945b59a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>    还需要修改导入的包  implementation ‘com.android.support:appcompat-v7:27.1.0’</p><h3 id="修改sdk的jar包"><a href="#修改sdk的jar包" class="headerlink" title="修改sdk的jar包"></a><a href="https://pan.baidu.com/s/1f9xxwmJR28_QfwA89AZSRg" target="_blank" rel="noopener">修改sdk的jar包</a></h3><p>Android Studio中双击shift，输入sdkManager,找到sdk路径<br><img src="https://upload-images.jianshu.io/upload_images/3117705-4abe58be869fee78.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p><p>copy路径，放入对应sdk下 覆盖jar包即可</p><p><img src="https://upload-images.jianshu.io/upload_images/3117705-124df15d4a35267e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p><blockquote><p>注意事项：<br>1.最好只操作27版本的，其他版本暂时不清楚会不会出问题<br>2.不会影响公司项目，这只是工具层的东西，不是编译层<br>3.当然你也可以用<a href="https://www.jianshu.com/p/c82817feba38" target="_blank" rel="noopener">Source Insight或者在线阅读源码</a>，我暂时不太习惯</p></blockquote><h2 id="心德"><a href="#心德" class="headerlink" title="心德"></a>心德</h2><h3 id="1-借助博客，多看几篇，了解初步原理和大概的用处"><a href="#1-借助博客，多看几篇，了解初步原理和大概的用处" class="headerlink" title="1.借助博客，多看几篇，了解初步原理和大概的用处"></a>1.借助博客，多看几篇，了解初步原理和大概的用处</h3><h3 id="2-xmind和uml帮助理解，掌握全局性的流程"><a href="#2-xmind和uml帮助理解，掌握全局性的流程" class="headerlink" title="2.xmind和uml帮助理解，掌握全局性的流程"></a>2.xmind和uml帮助理解，掌握全局性的流程</h3><h3 id="3-以基础api或者面试题作为切入点，带着问题看"><a href="#3-以基础api或者面试题作为切入点，带着问题看" class="headerlink" title="3.以基础api或者面试题作为切入点，带着问题看"></a>3.以基础api或者面试题作为切入点，带着问题看</h3><h3 id="4-只看关键代码和注释，分析对象之间的关系"><a href="#4-只看关键代码和注释，分析对象之间的关系" class="headerlink" title="4.只看关键代码和注释，分析对象之间的关系"></a>4.只看关键代码和注释，分析对象之间的关系</h3><h3 id="5-结合设计模式思考为什么这样设计，解决了什么问题"><a href="#5-结合设计模式思考为什么这样设计，解决了什么问题" class="headerlink" title="5.结合设计模式思考为什么这样设计，解决了什么问题"></a>5.结合设计模式思考为什么这样设计，解决了什么问题</h3><h3 id="6-书籍-艺术探索，进阶之光，源码解析与实战"><a href="#6-书籍-艺术探索，进阶之光，源码解析与实战" class="headerlink" title="6.书籍 艺术探索，进阶之光，源码解析与实战"></a>6.书籍 艺术探索，进阶之光，源码解析与实战</h3><h3 id="7-在此应用场景下，优缺点是什么，最好是自己来手写一遍-只用写主要的功能，去除细枝末节"><a href="#7-在此应用场景下，优缺点是什么，最好是自己来手写一遍-只用写主要的功能，去除细枝末节" class="headerlink" title="7.在此应用场景下，优缺点是什么，最好是自己来手写一遍(只用写主要的功能，去除细枝末节)"></a>7.在此应用场景下，优缺点是什么，最好是自己来手写一遍(只用写主要的功能，去除细枝末节)</h3><h3 id="8-忘了也不要紧，写博客详细记录自己的分析过程，到时候回顾起来很方便"><a href="#8-忘了也不要紧，写博客详细记录自己的分析过程，到时候回顾起来很方便" class="headerlink" title="8.忘了也不要紧，写博客详细记录自己的分析过程，到时候回顾起来很方便"></a>8.忘了也不要紧，写博客详细记录自己的分析过程，到时候回顾起来很方便</h3><pre><code>本人方面，也只是在实践的过程当中。有待提高</code></pre><p>光说不练假把式，接下来我会以新手的身份，重新学习Android，并整理出自己的知识体系。</p><p>下一篇 Activity启动流程</p>]]></content>
     
     <summary type="html">
     
@@ -308,6 +307,50 @@
 &lt;p&gt;本人水平有限，以下内容只能作为探讨和交流，如果有错误或者不足的地方，还请指正，相互学习。&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h2 id=&quot;准备工作：&quot;&gt;&lt;a href=&quot;#准备工作：&quot; class=&quot;headerlink&quot; title=&quot;准备工
+      
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>setContentView源码分析</title>
+    <link href="https://igding.github.io/2018/06/12/setContentView%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
+    <id>https://igding.github.io/2018/06/12/setContentView源码分析/</id>
+    <published>2018-06-12T07:42:42.000Z</published>
+    <updated>2018-06-15T09:56:44.947Z</updated>
+    
+    <content type="html"><![CDATA[<p>ViewRoot 继承自framelayout, 根布局<br>Window<br>DecorView</p><pre><code> public void setContentView(@LayoutRes int layoutResID) {    getWindow().setContentView(layoutResID);//实际上是getWindow()在调用，    initWindowDecorActionBar();//设置ActionBar(不包含状态栏)} public Window getWindow() {    return mWindow;}// Window类的注释代码only existing implementation is PhoneWindow public abstract class Window {//唯一的实现类是PhoneWindow}</code></pre><p>PhoneWindow的setContentView核心源码</p><pre><code>  if (mContentParent == null) {//mContentParent是viewgroup      installDecor();//初始化Decor  } //设置我们的布局填充到mContentParentmLayoutInflater.inflate(layoutResID, mContentParent);</code></pre><p>这段代码说明了，实际上我们的布局文件之上，还有一个父容器viewgroup</p><pre><code>private void installDecor() {   if (mDecor == null) {       mDecor = generateDecor(-1);//创建一个DecorView       //设置的属性和动画效果直接忽略   else {       mDecor.setWindow(this);//DecorView设置一个window   }   if (mContentParent == null) {       mContentParent = generateLayout(mDecor);     //如果viewgroup为空，则生成一个layout</code></pre><p> generateDecor源码分析</p><pre><code>protected DecorView generateDecor(int featureId) {    //内部就是new了一个DecorView。    return new DecorView(context, featureId, this, getAttributes());}</code></pre><p>generateLayout()源码分析</p><blockquote><p>generateLayout内部实际上就是在setFlags和setLayout和style和requestFeature()和动画一系列的操作最终就是在创建一个DecorView。同时，也印证了，在设置getWindow.requestFeature时，为什么要设置在setContentView()之前，因为这些在之前就已经设置了。最后是会根据不同的状态去加载不同的布局</p></blockquote><p><img src="https://upload-images.jianshu.io/upload_images/3117705-a444441d4d1a35b8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p><pre><code>//最后会加载layoutResourcemDecor.onResourcesLoaded(mLayoutInflater, layoutResource);</code></pre><p>onResourcesLoaded内部实际上就是把layoutResource填充进来</p><pre><code>void onResourcesLoaded(LayoutInflater inflater, int layoutResource) {      final View root = inflater.inflate(layoutResource, null);}</code></pre><p>创建完父容器之后，再去填充我们自己的布局，底层是用的xml解析，解析过程(略)。</p><p>也就是说，setContentView()实际上就是两步<br>1.加载父容器(包括各种style和各类资源等)，<br>2.加载自身布局</p><p>但是这里仅仅只是加载，正如我们最初在学activity生命周期时，很明确的说明，oncreate()只是在准备阶段，加载资源文件，也就是说，没有将view添加到window。因为oncrete中setContentView()仅仅只是资源准备阶段，只有当ActivityThread执行onReLauchActivity时，也就是onResume()方法时，才会将view添加到window中</p><p><img src="https://upload-images.jianshu.io/upload_images/3117705-d5345a767c2b0d0b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p><p>下一篇，将会讲解，DecorView是如何添加到窗口window的源码分析</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;ViewRoot 继承自framelayout, 根布局&lt;br&gt;Window&lt;br&gt;DecorView&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt; public void setContentView(@LayoutRes int layoutResID) {
+    getWindo
+      
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Git命令整理</title>
+    <link href="https://igding.github.io/2018/03/23/Git%E5%91%BD%E4%BB%A4%E6%95%B4%E7%90%86/"/>
+    <id>https://igding.github.io/2018/03/23/Git命令整理/</id>
+    <published>2018-03-23T13:03:53.578Z</published>
+    <updated>2018-08-09T13:45:15.160Z</updated>
+    
+    <content type="html"><![CDATA[<p> <a href="https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000" target="_blank" rel="noopener">廖雪峰Git学习链接</a></p><h2 id="1-安装-略"><a href="#1-安装-略" class="headerlink" title="1.安装(略)"></a>1.安装(略)</h2><h2 id="2-环境配置"><a href="#2-环境配置" class="headerlink" title="2.环境配置"></a>2.环境配置</h2><h6 id="a-git-config-–global-user-name-“Your-Name”"><a href="#a-git-config-–global-user-name-“Your-Name”" class="headerlink" title="a.  git config –global user.name “Your Name”"></a>a.  git config –global user.name “Your Name”</h6><h6 id="b-git-config-–global-user-email-“email-example-com“"><a href="#b-git-config-–global-user-email-“email-example-com“" class="headerlink" title="b.  git config –global user.email “email@example.com“"></a>b.  git config –global user.email “<a href="mailto:email@example.com" target="_blank" rel="noopener">email@example.com</a>“</h6><h6 id="c-ssh的绑定"><a href="#c-ssh的绑定" class="headerlink" title="c.  ssh的绑定"></a>c.  ssh的绑定</h6><p>windows的位置<br><img src="https://upload-images.jianshu.io/upload_images/3117705-638638f2880dd219.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p><p>Mac的位置<br><img src="https://upload-images.jianshu.io/upload_images/3117705-309bca07ac6f7d61.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p><h6 id="d-将id-rsa-pub的内容copy到对应平台“设置”中的ssh"><a href="#d-将id-rsa-pub的内容copy到对应平台“设置”中的ssh" class="headerlink" title="d.将id_rsa.pub的内容copy到对应平台“设置”中的ssh"></a>d.将id_rsa.pub的内容copy到对应平台“设置”中的ssh</h6><h2 id="3-项目的创建分两种情况"><a href="#3-项目的创建分两种情况" class="headerlink" title="3.项目的创建分两种情况"></a>3.项目的创建分两种情况</h2><h6 id="a-本地已创建，但是服务器没创建"><a href="#a-本地已创建，但是服务器没创建" class="headerlink" title="a.本地已创建，但是服务器没创建"></a>a.本地已创建，但是服务器没创建</h6><pre><code>1.在需要提交文件的地方 输入 git init2.服务器中创建项目， 3.用git命令去绑定url,命令：git remote add origin 加上ssh的链接</code></pre><p>必要情况下，强行塞进去<br>git push -u origin master -f<br>初次没啥问题，不过之后就要注意了</p><p><img src="https://upload-images.jianshu.io/upload_images/3117705-bde928b6527a8cfb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p><h6 id="b-服务器已创建-，但本地未创建"><a href="#b-服务器已创建-，但本地未创建" class="headerlink" title="b.服务器已创建 ，但本地未创建"></a>b.服务器已创建 ，但本地未创建</h6><p>git clone+ssh</p><h2 id="4-提交代码"><a href="#4-提交代码" class="headerlink" title="4.提交代码"></a>4.提交代码</h2><p>在“下载的项目”里面进行add commit 和push操作，项目外面不行</p><p><img src="https://upload-images.jianshu.io/upload_images/3117705-71a70976889e27b7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p><p><img src="https://upload-images.jianshu.io/upload_images/3117705-bafa9a3a9d05ac0c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p><h6 id="错误示范，在项目外进行提交"><a href="#错误示范，在项目外进行提交" class="headerlink" title="错误示范，在项目外进行提交"></a>错误示范，在项目外进行提交</h6><p><img src="https://upload-images.jianshu.io/upload_images/3117705-d7aac4feee04cfea.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p><p>git branch -a  查看本地所有分支</p><p>git pull  拉取远程所有代码（只会拉取代码）</p><p>git fetch  拉取远程所有分支到本地<br><img src="https://upload-images.jianshu.io/upload_images/3117705-82dfd216c8ea37ae.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="只要remote下有分支就代表拉取成功"></p><p>git checkout xx(分支名)  切换分支 </p><pre><code>远程仓库必须要有改动，不然拉取是无效的。同时如果我已修改代码，同时想拉取别人已提交的代码，必须      先提交自己的代码再进行拉取</code></pre><p>git merge +指定分支    合并分支</p><p>git status 用于显示工作目录和暂存区的状态</p><p><img src="https://upload-images.jianshu.io/upload_images/3117705-e5aea00ac770b569.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p><p>git reset –hard commit id(commit id 代表某个版本的id)   项目回滚</p><p>git log 去查询提交记录，包括commit id</p><p> git status 查看缓存区的状态(哪些已提交，哪些属于commit状态)<br>回滚之后提交代码，如果跟远程有冲突，要么下拉远程仓库代码解决冲突，要么 强行塞给远程分支(谨慎操作)</p><h2 id="项目常用套路："><a href="#项目常用套路：" class="headerlink" title="项目常用套路："></a>项目常用套路：</h2><h6 id="1-修改bug时"><a href="#1-修改bug时" class="headerlink" title="1. 修改bug时"></a>1. 修改bug时</h6><p>新建一个分支(例如 issue-101)，<br>创建分支，并切换git checkout -b issue-101<br>解决完删除新建的分支即可 git branch -d issue-101</p><h6 id="2-git怎么管理"><a href="#2-git怎么管理" class="headerlink" title="2.git怎么管理"></a>2.git怎么管理</h6><blockquote><p>a. master分支设置成保护状态(只能本人操作，其他人不可操作)<br>b. 分支个数=人数+2，”2”分别代表master和master的测试版</p></blockquote><h6 id="3-发布新版本"><a href="#3-发布新版本" class="headerlink" title="3.发布新版本"></a>3.发布新版本</h6><blockquote><p>a .git tag v1.0  在对应分支标记一个tag(因为每次要从id去找，太麻烦了)<br>b. 如果发布新版本忘记打标签了，可以用Git log 找到commit id<br>    输入 git tag v1.0  +commit id<br>c. 如果标签打错了，也可以删除  git tag -d v0.1<br>d. git tag查看所有标签<br>e. git show +标签名，可以得到commit id<br>f. 推送所有tag  git push origin –tags</p></blockquote><h6 id="4-原理"><a href="#4-原理" class="headerlink" title="4.原理"></a>4.原理</h6><p>只需要弄清楚基本原理，常用命令内部实际上在哪个区域干什么操作就行了。</p><p><img src="https://upload-images.jianshu.io/upload_images/3117705-7f69844d070ac2a1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt; &lt;a href=&quot;https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;廖雪峰Git学习链接&lt;
       
     
     </summary>
@@ -330,27 +373,6 @@
       
         &lt;p&gt;不擅长 长篇大论，直接以问题作为切入点来进行源码分析。&lt;/p&gt;
 &lt;p&gt;1.Java层的入口是main(),那么Android有没有main()？里面在做什么操作？&lt;br&gt;2.Android是如何启动的，Activity的生命周期是如何调用的？&lt;br&gt;3.setContent
-      
-    
-    </summary>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>Git命令整理</title>
-    <link href="https://igding.github.io/2018/03/23/Git%E5%91%BD%E4%BB%A4%E6%95%B4%E7%90%86/"/>
-    <id>https://igding.github.io/2018/03/23/Git命令整理/</id>
-    <published>2018-03-23T13:03:53.578Z</published>
-    <updated>2018-08-09T13:45:15.160Z</updated>
-    
-    <content type="html"><![CDATA[<p> <a href="https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000" target="_blank" rel="noopener">廖雪峰Git学习链接</a></p><h2 id="1-安装-略"><a href="#1-安装-略" class="headerlink" title="1.安装(略)"></a>1.安装(略)</h2><h2 id="2-环境配置"><a href="#2-环境配置" class="headerlink" title="2.环境配置"></a>2.环境配置</h2><h6 id="a-git-config-–global-user-name-“Your-Name”"><a href="#a-git-config-–global-user-name-“Your-Name”" class="headerlink" title="a.  git config –global user.name “Your Name”"></a>a.  git config –global user.name “Your Name”</h6><h6 id="b-git-config-–global-user-email-“email-example-com“"><a href="#b-git-config-–global-user-email-“email-example-com“" class="headerlink" title="b.  git config –global user.email “email@example.com“"></a>b.  git config –global user.email “<a href="mailto:email@example.com" target="_blank" rel="noopener">email@example.com</a>“</h6><h6 id="c-ssh的绑定"><a href="#c-ssh的绑定" class="headerlink" title="c.  ssh的绑定"></a>c.  ssh的绑定</h6><p>windows的位置<br><img src="https://upload-images.jianshu.io/upload_images/3117705-638638f2880dd219.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p><p>Mac的位置<br><img src="https://upload-images.jianshu.io/upload_images/3117705-309bca07ac6f7d61.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p><h6 id="d-将id-rsa-pub的内容copy到对应平台“设置”中的ssh"><a href="#d-将id-rsa-pub的内容copy到对应平台“设置”中的ssh" class="headerlink" title="d.将id_rsa.pub的内容copy到对应平台“设置”中的ssh"></a>d.将id_rsa.pub的内容copy到对应平台“设置”中的ssh</h6><h2 id="3-项目的创建分两种情况"><a href="#3-项目的创建分两种情况" class="headerlink" title="3.项目的创建分两种情况"></a>3.项目的创建分两种情况</h2><h6 id="a-本地已创建，但是服务器没创建"><a href="#a-本地已创建，但是服务器没创建" class="headerlink" title="a.本地已创建，但是服务器没创建"></a>a.本地已创建，但是服务器没创建</h6><pre><code>1.在需要提交文件的地方 输入 git init2.服务器中创建项目， 3.用git命令去绑定url,命令：git remote add origin 加上ssh的链接</code></pre><p>必要情况下，强行塞进去<br>git push -u origin master -f<br>初次没啥问题，不过之后就要注意了</p><p><img src="https://upload-images.jianshu.io/upload_images/3117705-bde928b6527a8cfb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p><h6 id="b-服务器已创建-，但本地未创建"><a href="#b-服务器已创建-，但本地未创建" class="headerlink" title="b.服务器已创建 ，但本地未创建"></a>b.服务器已创建 ，但本地未创建</h6><p>git clone+ssh</p><h2 id="4-提交代码"><a href="#4-提交代码" class="headerlink" title="4.提交代码"></a>4.提交代码</h2><p>在“下载的项目”里面进行add commit 和push操作，项目外面不行</p><p><img src="https://upload-images.jianshu.io/upload_images/3117705-71a70976889e27b7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p><p><img src="https://upload-images.jianshu.io/upload_images/3117705-bafa9a3a9d05ac0c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p><h6 id="错误示范，在项目外进行提交"><a href="#错误示范，在项目外进行提交" class="headerlink" title="错误示范，在项目外进行提交"></a>错误示范，在项目外进行提交</h6><p><img src="https://upload-images.jianshu.io/upload_images/3117705-d7aac4feee04cfea.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p><p>git branch -a  查看本地所有分支</p><p>git pull  拉取远程所有代码（只会拉取代码）</p><p>git fetch  拉取远程所有分支到本地<br><img src="https://upload-images.jianshu.io/upload_images/3117705-82dfd216c8ea37ae.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="只要remote下有分支就代表拉取成功"></p><p>git checkout xx(分支名)  切换分支 </p><pre><code>远程仓库必须要有改动，不然拉取是无效的。同时如果我已修改代码，同时想拉取别人已提交的代码，必须      先提交自己的代码再进行拉取</code></pre><p>git merge +指定分支    合并分支</p><p>git status 用于显示工作目录和暂存区的状态</p><p><img src="https://upload-images.jianshu.io/upload_images/3117705-e5aea00ac770b569.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p><p>git reset –hard commit id(commit id 代表某个版本的id)   项目回滚</p><p>git log 去查询提交记录，包括commit id</p><p> git status 查看缓存区的状态(哪些已提交，哪些属于commit状态)<br>回滚之后提交代码，如果跟远程有冲突，要么下拉远程仓库代码解决冲突，要么 强行塞给远程分支(谨慎操作)</p><h2 id="项目常用套路："><a href="#项目常用套路：" class="headerlink" title="项目常用套路："></a>项目常用套路：</h2><h6 id="1-修改bug时"><a href="#1-修改bug时" class="headerlink" title="1. 修改bug时"></a>1. 修改bug时</h6><p>新建一个分支(例如 issue-101)，<br>创建分支，并切换git checkout -b issue-101<br>解决完删除新建的分支即可 git branch -d issue-101</p><h6 id="2-git怎么管理"><a href="#2-git怎么管理" class="headerlink" title="2.git怎么管理"></a>2.git怎么管理</h6><blockquote><p>a. master分支设置成保护状态(只能本人操作，其他人不可操作)<br>b. 分支个数=人数+2，”2”分别代表master和master的测试版</p></blockquote><h6 id="3-发布新版本"><a href="#3-发布新版本" class="headerlink" title="3.发布新版本"></a>3.发布新版本</h6><blockquote><p>a .git tag v1.0  在对应分支标记一个tag(因为每次要从id去找，太麻烦了)<br>b. 如果发布新版本忘记打标签了，可以用Git log 找到commit id<br>    输入 git tag v1.0  +commit id<br>c. 如果标签打错了，也可以删除  git tag -d v0.1<br>d. git tag查看所有标签<br>e. git show +标签名，可以得到commit id<br>f. 推送所有tag  git push origin –tags</p></blockquote><h6 id="4-原理"><a href="#4-原理" class="headerlink" title="4.原理"></a>4.原理</h6><p>只需要弄清楚基本原理，常用命令内部实际上在哪个区域干什么操作就行了。</p><p><img src="https://upload-images.jianshu.io/upload_images/3117705-7f69844d070ac2a1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt; &lt;a href=&quot;https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;廖雪峰Git学习链接&lt;
       
     
     </summary>
