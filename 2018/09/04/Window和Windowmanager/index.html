@@ -106,7 +106,7 @@
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3117705-82881c702273df0b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3117705-dbb3070807abcff4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3117705-27b149722c876ecd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2018-09-04T11:03:52.866Z">
+<meta property="og:updated_time" content="2018-09-04T11:11:12.057Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Window和Windowmanager">
 <meta name="twitter:description" content="Window叫做窗口，本质上就是承载view的容器  参考资料 Android艺术探索   * &amp;lt;p&amp;gt;The only existing implementation of this abstract class is  * android.view.PhoneWindow, which you should instantiate when needing a Window.">
@@ -369,7 +369,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  3,045
+                  3,030
                 </span>
               
 
@@ -941,8 +941,7 @@ private void scheduleTimeoutLocked(ToastRecord r){
     mHandler.sendMessageDelayed(m, delay);
 }
 </code></pre><p>也就是说，完成一个toast，调用了两种ipc的过程<br>分别是toast.makeText()调用了Toast内部的TN过程<br>还有show方法里面的NotificationManagerService的IPC过程</p>
-<h3 id="4-最后的问题-一个应用中有多少个-Window？"><a href="#4-最后的问题-一个应用中有多少个-Window？" class="headerlink" title="4 最后的问题  一个应用中有多少个 Window？"></a>4 最后的问题  一个应用中有多少个 Window？</h3><p>默认是有一个<br>常规：Activity数量+dialog数量+1</p>
-<p>我们可以从Activity的源码开始分析<br>Activity是属于应用级的window</p>
+<h3 id="4-最后的问题-一个应用中有多少个-Window？"><a href="#4-最后的问题-一个应用中有多少个-Window？" class="headerlink" title="4 最后的问题  一个应用中有多少个 Window？"></a>4 最后的问题  一个应用中有多少个 Window？</h3><p>我们可以从Activity的源码开始分析<br>Activity是属于应用级的window</p>
 <p><img src="https://upload-images.jianshu.io/upload_images/3117705-3726b7afe16e5878.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="因为window是个抽象类，实现类就是phoneWindow"><br>所以这里就代表了 多少个Activity就有多少应用级的window</p>
 <p><img src="https://upload-images.jianshu.io/upload_images/3117705-ca7e2c3b94a89097.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="toast是属于系统window"></p>
 <p><img src="https://upload-images.jianshu.io/upload_images/3117705-82881c702273df0b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="PopupWindow和Activity是共用一个window"></p>
