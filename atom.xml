@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://igding.github.io/"/>
-  <updated>2018-09-04T15:41:14.128Z</updated>
+  <updated>2018-09-04T15:45:36.359Z</updated>
   <id>https://igding.github.io/</id>
   
   <author>
@@ -15,6 +15,27 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Context以及装饰者模式</title>
+    <link href="https://igding.github.io/2018/09/04/Context%E4%BB%A5%E5%8F%8A%E8%A3%85%E9%A5%B0%E8%80%85%E6%A8%A1%E5%BC%8F/"/>
+    <id>https://igding.github.io/2018/09/04/Context以及装饰者模式/</id>
+    <published>2018-09-04T15:40:00.000Z</published>
+    <updated>2018-09-04T15:45:36.359Z</updated>
+    
+    <content type="html"><![CDATA[<p><a href="https://blog.csdn.net/guolin_blog/article/details/47028975" target="_blank" rel="noopener">Context参考资料</a><br>装饰者模式参考资料:研磨设计模式，Android源码设计模式解析与实战。</p><blockquote><p>Android和Java的区别，划分的界限：Android不像Java写一个类和main就可以运行，而是有一个完整的Android工程环境，在这个环境下，要有像Activity、Service、BroadcastReceiver等系统组件，而这些组件并不是像一个普通的Java对象new一下就能创建实例的了，而是要有它们各自的上下文环境，如果强行去new的话，该组件则只是一个普通类，不具备任何属性</p></blockquote><h3 id="1-1-Context的继承关系"><a href="#1-1-Context的继承关系" class="headerlink" title="1.1 Context的继承关系"></a>1.1 Context的继承关系</h3><p><img src="https://upload-images.jianshu.io/upload_images/3117705-891b1825dfca2cfe.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p><pre><code>从这里看出来，context只有三种，service，application和activity。Context数量 = Activity数量 + Service数量 + Application(1)当然，这里指的是单进程的情况下。</code></pre><h3 id="1-2-Context的应用场景"><a href="#1-2-Context的应用场景" class="headerlink" title="1.2 Context的应用场景"></a>1.2 Context的应用场景</h3><p><img src="https://upload-images.jianshu.io/upload_images/3117705-ae78392b41fe21b5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p><pre><code>注意事项 1.与UI相关的context，则要用activity的context        2.因为activity的context生命周期和application的生命周期不一样，          Context引用的持有可能造成OOM的问题        3.startActivity时，不要用application的context来进行，因为如果用          application去开启activity，会产生一个新的task，不建议        4.如果某个类中获取的context基本都是属于application，那么建议          统一在单独的类中进行获取，方便开源自己的util库。          无需在application中写newInstance，因为application本身就是单例          单例的控制是在系统层。所以我们看不到        5.如果utils类需要传activity的context的话，就必须通过传参的形式处理。</code></pre><h3 id="1-3-使用Application时的注意事项"><a href="#1-3-使用Application时的注意事项" class="headerlink" title="1.3 使用Application时的注意事项"></a>1.3 使用Application时的注意事项</h3><pre><code>Application是单例,全局只有一个(多进程除外)，无需new,系统组件的实例是要由系统来去创建的如果new Application的话，它就只是一个普通的Java对象，不具备任何Context的能力。</code></pre><h3 id="2-装饰者模式"><a href="#2-装饰者模式" class="headerlink" title="2.装饰者模式"></a>2.装饰者模式</h3><p>1.作用:首先知道某个设计模式的作用，以及结合生活应用场景<br>何为装饰者，简而言之，就好比人，穿不同的衣服，虽然有不同的装饰，但是本质还是人。<br>其职责就是给对象添加一些额外的职责，通常用于继承关系的一种替代方案之一。</p><p>扯特么半天，总感觉接口也可以达到这样的效果。</p><p>2.基本功:(查缺补漏)</p><p>3.优缺点</p><p>4.画出对应的UML，记住关键性代码(uml相当于骨架或者大纲，代码相当于血肉)</p><p>5.通过1-2个源码分析来巩固自己对该模式的理解(进阶)</p><p>6.相关设计模式的配套使用(每个设计模式，并不是单一的去体现某一个设计原则，设计模式之间可以相互配合使用)<br>7.与人交流(不能活在自己的世界里闭门造车，强行去理解)</p><p>如果不需要某个奖金计算方式了，直接不写就行了，原有的可以保留。<br>如果是新增计算方法，那么新建一个类就好了。<br>但是如果修改，那就恶心。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;&lt;a href=&quot;https://blog.csdn.net/guolin_blog/article/details/47028975&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Context参考资料&lt;/a&gt;&lt;br&gt;装饰者模式参考资料:研磨设计模式，A
+      
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>四种布局填充器的区别,以及对应的设计模式</title>
@@ -295,28 +316,6 @@
   </entry>
   
   <entry>
-    <title>View的工作原理</title>
-    <link href="https://igding.github.io/2018/06/12/View%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/"/>
-    <id>https://igding.github.io/2018/06/12/View的工作原理/</id>
-    <published>2018-06-12T07:42:42.000Z</published>
-    <updated>2018-07-01T15:11:21.675Z</updated>
-    
-    <content type="html"><![CDATA[<p><a href="https://blog.csdn.net/qian520ao/article/details/78657084" target="_blank" rel="noopener">参考链接</a></p><p>ViewRootImpl：负责view的布局 测量 绘制</p><p>DecorView:<br>因为oncreate走完，仅仅只是资源的准备工作，实际view的绘制工作是在onresume()中进行的，同时，这里要看ActivityThread的handlerMessage()方法中的RESUME_ACTIVITY，会走handleResumeActivity()方法中，performResumeActivity()方法得到一个ActivityRecord</p><pre><code>  ViewManager wm = a.getWindowManager();  WindowManager.LayoutParams l = r.window.getAttributes();  a.mDecor = decor;  l.type = WindowManager.LayoutParams.TYPE_BASE_APPLICATION;  l.softInputMode |= forwardBit; if (r.mPreserveWindow) {     a.mWindowAdded = true;     r.mPreserveWindow = false;     ViewRootImpl impl = decor.getViewRootImpl();       if (impl != null) {          impl.notifyChildRebuilt();        }     }if (a.mVisibleFromClient) {    if (!a.mWindowAdded) {       a.mWindowAdded = true;       wm.addView(decor, l);//核心代码，l代表的是所有的资源和decorView添加到ViewManager </code></pre><p>wm是一个接口，接口addView,实际就要找到它的一个实现类，也就是WindowManagerGlobal中的addView()，只是这里运用到了一个设计模式，直接分析WindowManagerGlobal的addView即可</p><p>核心代码</p><pre><code>       //前面一堆系统调用和资源配置就忽略掉了，主要是以下代码       root = new ViewRootImpl(view.getContext(), display);       view.setLayoutParams(wparams);       mViews.add(view);//这三个add实际上是三个list       mRoots.add(root);       mParams.add(wparams);       root.setView(view, wparams, panelParentView);//核心代码ArrayList&lt;View&gt; mViews = new ArrayList&lt;View&gt;();ArrayList&lt;ViewRootImpl&gt; mRoots = new ArrayList&lt;ViewRootImpl&gt;();ArrayList&lt;WindowManager.LayoutParams&gt; mParams =new ArrayList&lt;WindowManager.LayoutParams&gt;();</code></pre><p>ViewRoot的setView()源码分析<br>内部主要有一个requestLayout() ==&gt; scheduleTraversals()==&gt; mChoreographer.postCallback(Choreographer.CALLBACK_TRAVERSAL, mTraversalRunnable, null);==&gt;实际上是调用了这个runable，而这个runable内部实际上是调用了doTraversal()方法</p><pre><code>final class TraversalRunnable implements Runnable {    @Override    public void run() {        doTraversal();    }}</code></pre><p>doTraversal中的核心方法是performTraversals();这里才正式开启了UI的绘制流程</p><p>WindowManage.LayoutParams，所有的资源都在这里<br>Rect frame 绘制了一个矩形。这个矩形并不是画布，而是意思大概就是，先确定他的整体位置</p><p>中间是一大堆比较恶心的计算。</p><p>下面，有一个测量方法performMeasure()，调用view的measure,再调用自身的onMeasure()方法<br>performLayout()布局==&gt;view的layout(),再调用自身的onLayout()；<br>performDraw()绘制==&gt;view的draw(),再调用自身的onDraw()；<br>draw中才会有surface画布，这个时候view才会显示出来</p><p>setContentView只是资源的准备<br>onresume才是真正的布局测量绘制</p><p>下一篇，对测量 布局 绘制流程的详细分析。</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;&lt;a href=&quot;https://blog.csdn.net/qian520ao/article/details/78657084&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;参考链接&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;ViewRootImpl：负责view的布局 
-      
-    
-    </summary>
-    
-    
-  </entry>
-  
-  <entry>
     <title>setContentView源码分析</title>
     <link href="https://igding.github.io/2018/06/12/setContentView%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
     <id>https://igding.github.io/2018/06/12/setContentView源码分析/</id>
@@ -356,6 +355,28 @@
 &lt;p&gt;本人水平有限，以下内容只能作为探讨和交流，如果有错误或者不足的地方，还请指正，相互学习。&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h2 id=&quot;准备工作：&quot;&gt;&lt;a href=&quot;#准备工作：&quot; class=&quot;headerlink&quot; title=&quot;准备工
+      
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>View的工作原理</title>
+    <link href="https://igding.github.io/2018/06/12/View%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/"/>
+    <id>https://igding.github.io/2018/06/12/View的工作原理/</id>
+    <published>2018-06-12T07:42:42.000Z</published>
+    <updated>2018-07-01T15:11:21.675Z</updated>
+    
+    <content type="html"><![CDATA[<p><a href="https://blog.csdn.net/qian520ao/article/details/78657084" target="_blank" rel="noopener">参考链接</a></p><p>ViewRootImpl：负责view的布局 测量 绘制</p><p>DecorView:<br>因为oncreate走完，仅仅只是资源的准备工作，实际view的绘制工作是在onresume()中进行的，同时，这里要看ActivityThread的handlerMessage()方法中的RESUME_ACTIVITY，会走handleResumeActivity()方法中，performResumeActivity()方法得到一个ActivityRecord</p><pre><code>  ViewManager wm = a.getWindowManager();  WindowManager.LayoutParams l = r.window.getAttributes();  a.mDecor = decor;  l.type = WindowManager.LayoutParams.TYPE_BASE_APPLICATION;  l.softInputMode |= forwardBit; if (r.mPreserveWindow) {     a.mWindowAdded = true;     r.mPreserveWindow = false;     ViewRootImpl impl = decor.getViewRootImpl();       if (impl != null) {          impl.notifyChildRebuilt();        }     }if (a.mVisibleFromClient) {    if (!a.mWindowAdded) {       a.mWindowAdded = true;       wm.addView(decor, l);//核心代码，l代表的是所有的资源和decorView添加到ViewManager </code></pre><p>wm是一个接口，接口addView,实际就要找到它的一个实现类，也就是WindowManagerGlobal中的addView()，只是这里运用到了一个设计模式，直接分析WindowManagerGlobal的addView即可</p><p>核心代码</p><pre><code>       //前面一堆系统调用和资源配置就忽略掉了，主要是以下代码       root = new ViewRootImpl(view.getContext(), display);       view.setLayoutParams(wparams);       mViews.add(view);//这三个add实际上是三个list       mRoots.add(root);       mParams.add(wparams);       root.setView(view, wparams, panelParentView);//核心代码ArrayList&lt;View&gt; mViews = new ArrayList&lt;View&gt;();ArrayList&lt;ViewRootImpl&gt; mRoots = new ArrayList&lt;ViewRootImpl&gt;();ArrayList&lt;WindowManager.LayoutParams&gt; mParams =new ArrayList&lt;WindowManager.LayoutParams&gt;();</code></pre><p>ViewRoot的setView()源码分析<br>内部主要有一个requestLayout() ==&gt; scheduleTraversals()==&gt; mChoreographer.postCallback(Choreographer.CALLBACK_TRAVERSAL, mTraversalRunnable, null);==&gt;实际上是调用了这个runable，而这个runable内部实际上是调用了doTraversal()方法</p><pre><code>final class TraversalRunnable implements Runnable {    @Override    public void run() {        doTraversal();    }}</code></pre><p>doTraversal中的核心方法是performTraversals();这里才正式开启了UI的绘制流程</p><p>WindowManage.LayoutParams，所有的资源都在这里<br>Rect frame 绘制了一个矩形。这个矩形并不是画布，而是意思大概就是，先确定他的整体位置</p><p>中间是一大堆比较恶心的计算。</p><p>下面，有一个测量方法performMeasure()，调用view的measure,再调用自身的onMeasure()方法<br>performLayout()布局==&gt;view的layout(),再调用自身的onLayout()；<br>performDraw()绘制==&gt;view的draw(),再调用自身的onDraw()；<br>draw中才会有surface画布，这个时候view才会显示出来</p><p>setContentView只是资源的准备<br>onresume才是真正的布局测量绘制</p><p>下一篇，对测量 布局 绘制流程的详细分析。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;&lt;a href=&quot;https://blog.csdn.net/qian520ao/article/details/78657084&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;参考链接&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;ViewRootImpl：负责view的布局 
       
     
     </summary>

@@ -88,22 +88,20 @@
 
 
 
-<meta name="description" content="对事件分发还不太熟悉，且看完博客还一头雾水的朋友，不妨从面试题下手，带着问题去看源码，再由点到面，辅以xmind和流程图，看能否得以突破。  参考链接参考链接 面试题：1.view和viewgroup的事件分发？(事件分发的原理)流程如下  2.onTouch和onClick冲突问题？onTouch和onClick冲突的原因是因为，onTouch设置为true，onClick就不会执行。详细案例">
+<meta name="description" content="Context参考资料装饰者模式参考资料:研磨设计模式，Android源码设计模式解析与实战。  Android和Java的区别，划分的界限：Android不像Java写一个类和main就可以运行，而是有一个完整的Android工程环境，在这个环境下，要有像Activity、Service、BroadcastReceiver等系统组件，而这些组件并不是像一个普通的Java对象new一下就能创建实例">
 <meta property="og:type" content="article">
-<meta property="og:title" content="事件分发源码分析">
-<meta property="og:url" content="https://igding.github.io/2018/07/09/事件分发源码分析/index.html">
+<meta property="og:title" content="Context以及装饰者模式">
+<meta property="og:url" content="https://igding.github.io/2018/09/04/Context以及装饰者模式/index.html">
 <meta property="og:site_name" content="igding的博客">
-<meta property="og:description" content="对事件分发还不太熟悉，且看完博客还一头雾水的朋友，不妨从面试题下手，带着问题去看源码，再由点到面，辅以xmind和流程图，看能否得以突破。  参考链接参考链接 面试题：1.view和viewgroup的事件分发？(事件分发的原理)流程如下  2.onTouch和onClick冲突问题？onTouch和onClick冲突的原因是因为，onTouch设置为true，onClick就不会执行。详细案例">
+<meta property="og:description" content="Context参考资料装饰者模式参考资料:研磨设计模式，Android源码设计模式解析与实战。  Android和Java的区别，划分的界限：Android不像Java写一个类和main就可以运行，而是有一个完整的Android工程环境，在这个环境下，要有像Activity、Service、BroadcastReceiver等系统组件，而这些组件并不是像一个普通的Java对象new一下就能创建实例">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3117705-42412c178034e855.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3117705-205574126eff3e33.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3117705-5ff4fe4520323452.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3117705-13bac41fb10d5f6b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2018-07-08T17:09:54.804Z">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3117705-891b1825dfca2cfe.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3117705-ae78392b41fe21b5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2018-09-04T15:45:36.359Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="事件分发源码分析">
-<meta name="twitter:description" content="对事件分发还不太熟悉，且看完博客还一头雾水的朋友，不妨从面试题下手，带着问题去看源码，再由点到面，辅以xmind和流程图，看能否得以突破。  参考链接参考链接 面试题：1.view和viewgroup的事件分发？(事件分发的原理)流程如下  2.onTouch和onClick冲突问题？onTouch和onClick冲突的原因是因为，onTouch设置为true，onClick就不会执行。详细案例">
-<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/3117705-42412c178034e855.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta name="twitter:title" content="Context以及装饰者模式">
+<meta name="twitter:description" content="Context参考资料装饰者模式参考资料:研磨设计模式，Android源码设计模式解析与实战。  Android和Java的区别，划分的界限：Android不像Java写一个类和main就可以运行，而是有一个完整的Android工程环境，在这个环境下，要有像Activity、Service、BroadcastReceiver等系统组件，而这些组件并不是像一个普通的Java对象new一下就能创建实例">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/3117705-891b1825dfca2cfe.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 
 
 
@@ -133,13 +131,13 @@
 
 
 
-  <link rel="canonical" href="https://igding.github.io/2018/07/09/事件分发源码分析/">
+  <link rel="canonical" href="https://igding.github.io/2018/09/04/Context以及装饰者模式/">
 
 
 
 
 
-  <title>事件分发源码分析 | igding的博客</title>
+  <title>Context以及装饰者模式 | igding的博客</title>
   
 
 
@@ -296,7 +294,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://igding.github.io/2018/07/09/事件分发源码分析/">
+    <link itemprop="mainEntityOfPage" href="https://igding.github.io/2018/09/04/Context以及装饰者模式/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="igding">
@@ -313,7 +311,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">事件分发源码分析</h1>
+          <h1 class="post-title" itemprop="name headline">Context以及装饰者模式</h1>
         
 
         <div class="post-meta">
@@ -325,8 +323,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-09T01:10:42+08:00">
-                2018-07-09
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-04T23:40:00+08:00">
+                2018-09-04
               </time>
             
 
@@ -362,7 +360,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,881
+                  770
                 </span>
               
 
@@ -378,7 +376,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  8
+                  3
                 </span>
               
             </div>
@@ -399,254 +397,35 @@
       
 
       
-        <blockquote>
-<p>对事件分发还不太熟悉，且看完博客还一头雾水的朋友，不妨从面试题下手，带着问题去看源码，再由点到面，辅以xmind和流程图，看能否得以突破。</p>
+        <p><a href="https://blog.csdn.net/guolin_blog/article/details/47028975" target="_blank" rel="noopener">Context参考资料</a><br>装饰者模式参考资料:研磨设计模式，Android源码设计模式解析与实战。</p>
+<blockquote>
+<p>Android和Java的区别，划分的界限：Android不像Java写一个类和main就可以运行，而是有一个完整的Android工程环境，在这个环境下，要有像Activity、Service、BroadcastReceiver等系统组件，而这些组件并不是像一个普通的Java对象new一下就能创建实例的了，而是要有它们各自的上下文环境，如果强行去new的话，该组件则只是一个普通类，不具备任何属性</p>
 </blockquote>
-<p><a href="https://blog.csdn.net/guolin_blog/article/details/9097463" target="_blank" rel="noopener">参考链接</a><br><a href="https://blog.csdn.net/guolin_blog/article/details/9153747#commentsedit" target="_blank" rel="noopener">参考链接</a></p>
-<h2 id="面试题："><a href="#面试题：" class="headerlink" title="面试题："></a>面试题：</h2><h3 id="1-view和viewgroup的事件分发？-事件分发的原理"><a href="#1-view和viewgroup的事件分发？-事件分发的原理" class="headerlink" title="1.view和viewgroup的事件分发？(事件分发的原理)"></a>1.view和viewgroup的事件分发？(事件分发的原理)</h3><p>流程如下</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/3117705-42412c178034e855.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
-<h3 id="2-onTouch和onClick冲突问题？"><a href="#2-onTouch和onClick冲突问题？" class="headerlink" title="2.onTouch和onClick冲突问题？"></a>2.onTouch和onClick冲突问题？</h3><p>onTouch和onClick冲突的原因是因为，onTouch设置为true，onClick就不会执行。详细案例和源码分析如下。</p>
-<h4 id="2-1案例："><a href="#2-1案例：" class="headerlink" title="2.1案例："></a>2.1案例：</h4><pre><code>button.setOnTouchListener(this);
-button.setOnClickListener(this);
-
- @Override
-   public void onClick(View v) {
-    Log.i(TAG, &quot;onClick: &quot;);
-}
-
-  @Override
-    public boolean onTouch(View v, MotionEvent event) {
-      Log.i(TAG, &quot;onTouch: &quot;);
-    //button.performClick();假设加入这个，即便是写true，也会触发onclick.
-     return true;//关键是这里，如果设置为true则onclick不打印，设置为false，onclick就打印
- }
-</code></pre><h4 id="2-2源码分析："><a href="#2-2源码分析：" class="headerlink" title="2.2源码分析："></a>2.2源码分析：</h4><blockquote>
-<p>用户触摸屏幕时，将产生Touch事件，Touch事件的相关细节(包括触摸位置，时间等，)而封装的对象，不是Java来做的，而是工作activity的驱动来做的，驱动做完之后，触摸到屏幕时，第一时间会调用到activity的dispatchTouchEvent()，</p>
-</blockquote>
-<p>起点则为Activity的dispatchTouchEvent()</p>
-<pre><code>//Activity类
- public boolean dispatchTouchEvent(MotionEvent ev) {
-    if (ev.getAction() == MotionEvent.ACTION_DOWN) {//为down时触发
-        onUserInteraction();//作用：实现屏保功能
- //当此activity在栈顶时，触屏点击按home，back，menu键等都会触发此方法
-    }
-    if (getWindow().superDispatchTouchEvent(ev)) {//PhoneWindow的superDispatchTouchEvent()着重分析。
-        return true;
-    }
-    return onTouchEvent(ev);
-}
-
-//PhoneWindow类
-@Override
-public boolean superDispatchTouchEvent(MotionEvent event) {
-    return mDecor.superDispatchTouchEvent(event);//这里是DecorView
-}
-
-//DecorView
-public boolean superDispatchTouchEvent(MotionEvent event) {
-    return super.dispatchTouchEvent(event);  //ViewGroup的dispatchTouchEvent()
-}
-</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">流程:</span><br><span class="line">起点:底层驱动</span><br><span class="line">==&gt;Activity的dispatchTouchEvent()</span><br><span class="line">==&gt;PhoneWindow的superDispatchTouchEvent()</span><br><span class="line">==&gt;DecorView的superDispatchTouchEvent()</span><br><span class="line">==&gt;ViewGroup的superDispatchTouchEvent()(核心分发)</span><br></pre></td></tr></table></figure>
-<p><a href="https://www.zhihu.com/question/46229570" target="_blank" rel="noopener">vysor实现原理</a></p>
-<pre><code> ViewGroup的DispatchTouchEvent()
- //触摸屏幕 不一定是用手指去按手机屏幕，也有可能是通过vysor等辅助功能来触摸
-//而ViewGroup的DispatchTouchEvent()里面 前几段代码的判断。 
-//则是专门针对vysor等辅助功能软件进行判断
-//是手指亲自点击 还是用辅助功能点击
-//涉及到的就不是Java层的了，而是驱动层
-if (mInputEventConsistencyVerifier != null) {
-     mInputEventConsistencyVerifier.onTouchEvent(ev, 1);
-}
-//Accessibility就是在判断，是否是辅助功能。
-if (ev.isTargetAccessibilityFocus() &amp;&amp; isAccessibilityFocusedViewOrHost()) {
-        ev.setTargetAccessibilityFocus(false);
-}
-
-boolean handled = false;//方法最终返回的就是handled.
-if (onFilterTouchEventForSecurity(ev)) {
-    boolean handled = false;//方法最终返回的就是handled.
-    if (onFilterTouchEventForSecurity(ev)) {//过滤，是否拦截，由requestDisallowInterceptTouchEvent()给flgs赋值。从而决定是true还是false
-      //下面的判断操作 总体是三个部分   
-        //1. 是否是第一次按下的操作，是的话，重启touch状态，touch是针对单指操作
-        if (actionMasked == MotionEvent.ACTION_DOWN) {
-            cancelAndClearTouchTargets(ev);//清理touch的target
-            resetTouchState();//重置状态
-        }
-
-        // 2.是否进行拦截 
-        final boolean intercepted;
-     if (!disallowIntercept) {
-    //disallowIntercept这个值决定了 拦截还是不拦截,而赋值操作，则是在requestDisallowInterceptTouchEvent(）进行赋值
-    //只有viewgroup才可以拦截，view是没有拦截的。view只有分发和处理
-    intercepted = onInterceptTouchEvent(ev);
- //是否取消操作，取消就为true，默认是为false，代表手指没有到屏幕外面
-   final boolean canceled = resetCancelNextUpFlag(this)
-   if (!canceled &amp;&amp; !intercepted) {//第一次触发，实际上在这里，默认都是false，因为手指没有到屏幕外面，所以canceled为false，默认没有被拦截，也为false。实际上是进入到这里
-           final int childrenCount = mChildrenCount;
-            if (newTouchTarget == null &amp;&amp; childrenCount != 0) {
-             //3.以下则是属于对多控件，对子view按照层级进行排列
-              final float x = ev.getX(actionIndex);
-              final float y = ev.getY(actionIndex);   
-              final ArrayList&lt;View&gt; preorderedList = buildTouchDispatchChildList();//这里则是将子view按照层级来保存
-              final boolean customOrder = preorderedList == null
-                            &amp;&amp; isChildrenDrawingOrderEnabled();
-              final View[] children = mChildren;
-              for (int i = childrenCount - 1; i &gt;= 0; i--) {
-                  //倒序遍历，获取子控件
-                  //省略部分业务代码(提取当前的view和按下时间以及坐标等
-              )
-
-  if (dispatchTransformedTouchEvent(ev, false, child, idBitsToAssign)) {
-  //这里的dispatchTransformedTouchEvent才是核心代码。内部分发给view的dispatchTouchEvent()
-    return handled;
-}
-</code></pre><p>dispatchTransformedTouchEvent方法 源码分析：</p>
-<pre><code>private boolean dispatchTransformedTouchEvent(MotionEvent event, boolean cancel,
-                                              View child, int desiredPointerIdBits) {
-    final boolean handled;
-    final int oldAction = event.getAction();
-    if (cancel || oldAction == MotionEvent.ACTION_CANCEL) {
-        event.setAction(MotionEvent.ACTION_CANCEL);
-        if (child == null) {
-            handled = super.dispatchTouchEvent(event);
-        } else {
-            handled = child.dispatchTouchEvent(event);//因为child不为空，则走到这里，child实际上就是view。
-        }
-        event.setAction(oldAction);
-        return handled;
-    }
-</code></pre><p>也就是说，从现在为止，调用顺序则为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">流程:</span><br><span class="line">起点:底层驱动</span><br><span class="line">==&gt;Activity的dispatchTouchEvent()</span><br><span class="line">==&gt;PhoneWindow的superDispatchTouchEvent()</span><br><span class="line">==&gt;DecorView的superDispatchTouchEvent()</span><br><span class="line">==&gt;ViewGroup的superDispatchTouchEvent()(核心分发)</span><br><span class="line">==&gt;View的dispatchTouchEvent()(核心分发)</span><br></pre></td></tr></table></figure></p>
-<p>View的dispatchTouchEvent()的部分重点源码：</p>
-<pre><code>  if (li != null  &amp;&amp; li.mOnTouchListener != null
-      &amp;&amp; (mViewFlags &amp; ENABLED_MASK) == ENABLED//所有控件默认都是ENABLED
-      &amp;&amp; li.mOnTouchListener.onTouch(this, event)) {
-      //主要看view调用的onTouch为true还是false
-      result = true; 
-   }
-  if (!result &amp;&amp; onTouchEvent(event)) {
-            result = true;
-  }
-
-
-//关键是这里是设置true还是false。如果是false，则会走result=true，到！result时，就不会执行ontouchEvent()方法，反之就会走onTouchEvent,不执行OntouchEvent，则不会执行其中的performClick()，就不会执行onclick,所以onClick事件是不执行的。
-
-从这里的源码，则可以回答刚才的现象，为什么设置false就会执行onTouchEvent，设置true则不会执行。
-</code></pre><p>当然 核心点就是performClick()方法，如果在onTouchListener中，直接用view去调用performClick()，那么即便onTouchListener返回true，onclick也会执行。</p>
-<h3 id="3-onClick和onLongClick事件能同事发生吗？"><a href="#3-onClick和onLongClick事件能同事发生吗？" class="headerlink" title="3.onClick和onLongClick事件能同事发生吗？"></a>3.onClick和onLongClick事件能同事发生吗？</h3><p>案例代码：</p>
-<p>MainActivity的代码</p>
-<pre><code>    View viewById = findViewById(R.id.myview);
-    viewById.setOnTouchListener(this);
-    viewById.setOnClickListener(this);
-    viewById.setOnLongClickListener(this);
-
-@Override
-public void onClick(View v) {
-    Log.i(TAG, &quot;onClick: &quot;);
-}
-
-@Override
-public boolean onLongClick(View v) {
-    Log.i(TAG, &quot;onLongClick: &quot;);
-    return false;
-}
-
-@Override
-public boolean onTouch(View v, MotionEvent event) {
-    Log.i(TAG, &quot;onTouch: &quot;);
-    return false;
-}
-</code></pre><p>  自定义view的代码</p>
-<pre><code>private static final String TAG = MeView.class.getSimpleName();
-
-public MeView(Context context) {
-    super(context);
-}
-
-public MeView(Context context, @Nullable AttributeSet attrs) {
-    super(context, attrs);
-}
-
-public MeView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-    super(context, attrs, defStyleAttr);
-}
-
-@Override
-public boolean dispatchTouchEvent(MotionEvent event) {
-    Log.i(TAG, &quot;我下发任务了 dispatchTouchEvent :&quot;);
-    return super.dispatchTouchEvent(event);
-}
-
-@Override
-public boolean onTouchEvent(MotionEvent event) {
-    Log.i(TAG, &quot;我处理任务 onTouchEvent :&quot;);
-    return super.onTouchEvent(event);
-}
-</code></pre><p>可以同时发生，只要onLongClick设置为false就可以同时发生，设置为true的话，onClick就不会同时发生。</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/3117705-205574126eff3e33.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
-<p>通过这个打log来看<br>onLongClick应该是在onTouchEvent()中的down时执行的<br>onClick应该是在onTouchEvent()中的up时执行的</p>
-<p>onTouchEvent()源码分析：<br>分别针对down和up的情况进行分析。</p>
-<pre><code>//找到up的主要源码
-case MotionEvent.ACTION_UP:
-    if (!post(mPerformClick)) {
-          performClick();
-       }
-
-public boolean performClick() {
-    final boolean result;
-    final ListenerInfo li = mListenerInfo;
-    if (li != null &amp;&amp; li.mOnClickListener != null) {
-        playSoundEffect(SoundEffectConstants.CLICK);
-        li.mOnClickListener.onClick(this);//重点代码
-        result = true;
-    } else {
-        result = false;
-    }
-    return result;
-}
-// 找到down的主要源码。
- case MotionEvent.ACTION_DOWN:
-        if (!clickable) {
-             checkForLongClick(0, x, y);
-             break;
-        }
-</code></pre><p>当然，这其中还有很多流程性的原理。例如 postDelay()方法和removeLongClick()方法</p>
-<pre><code>结论 ：
-1.从down到up，100毫秒内是点击事件 onclick,
-          超过500毫秒则是长按事件，onLongClick()
- 2.move时，未离开控件，则将onclick和onLongClick()移除掉
-</code></pre><p>关键代码</p>
-<pre><code>if (((viewFlags &amp; CLICKABLE) == CLICKABLE ||  
-        (viewFlags &amp; LONG_CLICKABLE) == LONG_CLICKABLE)) {
-    //这里只截取部分onTouchEvent()代码
-    switch (event.getAction()) {  
-        case MotionEvent.ACTION_UP:  
-           break；   
-        case MotionEvent.ACTION_DOWN:    
-            break;  
-        case MotionEvent.ACTION_CANCEL:  
-            break;  
-        case MotionEvent.ACTION_MOVE:  
-            break;  
-    }  
-    return true;  
-}  
-  return false;  
-}  
-</code></pre><p>只要是进入到down move up事件，onTouchEvent()return就为true，否则为false。</p>
-<p>也就是说<br><img src="https://upload-images.jianshu.io/upload_images/3117705-5ff4fe4520323452.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
-<p>down move up，任意一个return为true，下面就会执行，如果为false，则不会执行。</p>
-<p>调用默认的super的话，因为符合CLICKABLE，所以是可以执行。<br>如果是继承imageview，则不会执行onTouchEvent()，因为imageview默认是不可点击的，必须要设置点击属性才可以</p>
-<p>上面只是分析了viewgroup的dispatchTouchEvent和view的dispatchTouchEvent，，那么viewgroup的流程还会继续走，事件则会自己消耗掉。</p>
-<pre><code>if (mFirstTouchTarget == null) {
-  //如果view的dispatchTouchEvent为false，则mFirstTouchTarget为空
-   handled = dispatchTransformedTouchEvent(ev, canceled, null,TouchTarget.ALL_POINTER_IDS);
-  //事件会自己消费掉
-        } 
-</code></pre><p>核心点在于：</p>
-<h3 id="责任链模式"><a href="#责任链模式" class="headerlink" title="责任链模式"></a><a href="https://www.cnblogs.com/java-my-life/archive/2012/05/28/2516865.html" target="_blank" rel="noopener">责任链模式</a></h3><h3 id="事件分发uml流程图"><a href="#事件分发uml流程图" class="headerlink" title="事件分发uml流程图"></a><a href="https://pan.baidu.com/s/13cscBGRFwa9aH36nApg9qw" target="_blank" rel="noopener">事件分发uml流程图</a></h3><p><img src="https://upload-images.jianshu.io/upload_images/3117705-13bac41fb10d5f6b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="事件分发的整体流程"></p>
-<h3 id="实际案例bug"><a href="#实际案例bug" class="headerlink" title="实际案例bug"></a>实际案例bug</h3><p>典型案例：</p>
-<p>1.关于popupwindow的bug。<br><a href="https://blog.csdn.net/qq402164452/article/details/53353798" target="_blank" rel="noopener">https://blog.csdn.net/qq402164452/article/details/53353798</a><br>2.<a href="https://blog.csdn.net/Dota_wy/article/details/77451011" target="_blank" rel="noopener">https://blog.csdn.net/Dota_wy/article/details/77451011</a></p>
-<p>当然 这里还要结合实际的滑动冲突的bug，才能真正理解</p>
+<h3 id="1-1-Context的继承关系"><a href="#1-1-Context的继承关系" class="headerlink" title="1.1 Context的继承关系"></a>1.1 Context的继承关系</h3><p><img src="https://upload-images.jianshu.io/upload_images/3117705-891b1825dfca2cfe.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<pre><code>从这里看出来，context只有三种，service，application和activity。
+Context数量 = Activity数量 + Service数量 + Application(1)
+当然，这里指的是单进程的情况下。
+</code></pre><h3 id="1-2-Context的应用场景"><a href="#1-2-Context的应用场景" class="headerlink" title="1.2 Context的应用场景"></a>1.2 Context的应用场景</h3><p><img src="https://upload-images.jianshu.io/upload_images/3117705-ae78392b41fe21b5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<pre><code>注意事项 1.与UI相关的context，则要用activity的context
+        2.因为activity的context生命周期和application的生命周期不一样，
+          Context引用的持有可能造成OOM的问题
+        3.startActivity时，不要用application的context来进行，因为如果用
+          application去开启activity，会产生一个新的task，不建议
+        4.如果某个类中获取的context基本都是属于application，那么建议
+          统一在单独的类中进行获取，方便开源自己的util库。
+          无需在application中写newInstance，因为application本身就是单例
+          单例的控制是在系统层。所以我们看不到
+        5.如果utils类需要传activity的context的话，就必须通过传参的形式处理。
+</code></pre><h3 id="1-3-使用Application时的注意事项"><a href="#1-3-使用Application时的注意事项" class="headerlink" title="1.3 使用Application时的注意事项"></a>1.3 使用Application时的注意事项</h3><pre><code>Application是单例,全局只有一个(多进程除外)，无需new,系统组件的实例是要由系统来去创建的
+如果new Application的话，它就只是一个普通的Java对象，不具备任何Context的能力。
+</code></pre><h3 id="2-装饰者模式"><a href="#2-装饰者模式" class="headerlink" title="2.装饰者模式"></a>2.装饰者模式</h3><p>1.作用:首先知道某个设计模式的作用，以及结合生活应用场景<br>何为装饰者，简而言之，就好比人，穿不同的衣服，虽然有不同的装饰，但是本质还是人。<br>其职责就是给对象添加一些额外的职责，通常用于继承关系的一种替代方案之一。</p>
+<p>扯特么半天，总感觉接口也可以达到这样的效果。</p>
+<p>2.基本功:(查缺补漏)</p>
+<p>3.优缺点</p>
+<p>4.画出对应的UML，记住关键性代码(uml相当于骨架或者大纲，代码相当于血肉)</p>
+<p>5.通过1-2个源码分析来巩固自己对该模式的理解(进阶)</p>
+<p>6.相关设计模式的配套使用(每个设计模式，并不是单一的去体现某一个设计原则，设计模式之间可以相互配合使用)<br>7.与人交流(不能活在自己的世界里闭门造车，强行去理解)</p>
+<p>如果不需要某个奖金计算方式了，直接不写就行了，原有的可以保留。<br>如果是新增计算方法，那么新建一个类就好了。<br>但是如果修改，那就恶心。</p>
       
     </div>
     
@@ -713,7 +492,7 @@ public boolean performClick() {
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://igding.github.io/2018/07/09/事件分发源码分析/" title="事件分发源码分析">https://igding.github.io/2018/07/09/事件分发源码分析/</a>
+    <a href="https://igding.github.io/2018/09/04/Context以及装饰者模式/" title="Context以及装饰者模式">https://igding.github.io/2018/09/04/Context以及装饰者模式/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>
@@ -735,8 +514,8 @@ public boolean performClick() {
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/07/08/Mac使用技巧/" rel="next" title="Mac使用技巧">
-                <i class="fa fa-chevron-left"></i> Mac使用技巧
+              <a href="/2018/09/04/四种布局填充器的区别,以及对应的设计模式/" rel="next" title="四种布局填充器的区别,以及对应的设计模式">
+                <i class="fa fa-chevron-left"></i> 四种布局填充器的区别,以及对应的设计模式
               </a>
             
           </div>
@@ -744,10 +523,6 @@ public boolean performClick() {
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/08/01/BroadcastReceiver的工作流程/" rel="prev" title="BroadcastReceiver的工作流程">
-                BroadcastReceiver的工作流程 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -891,7 +666,7 @@ public boolean performClick() {
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#面试题："><span class="nav-number">1.</span> <span class="nav-text">面试题：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-view和viewgroup的事件分发？-事件分发的原理"><span class="nav-number">1.1.</span> <span class="nav-text">1.view和viewgroup的事件分发？(事件分发的原理)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-onTouch和onClick冲突问题？"><span class="nav-number">1.2.</span> <span class="nav-text">2.onTouch和onClick冲突问题？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1案例："><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1案例：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2源码分析："><span class="nav-number">1.2.2.</span> <span class="nav-text">2.2源码分析：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-onClick和onLongClick事件能同事发生吗？"><span class="nav-number">1.3.</span> <span class="nav-text">3.onClick和onLongClick事件能同事发生吗？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#责任链模式"><span class="nav-number">1.4.</span> <span class="nav-text">责任链模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#事件分发uml流程图"><span class="nav-number">1.5.</span> <span class="nav-text">事件分发uml流程图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实际案例bug"><span class="nav-number">1.6.</span> <span class="nav-text">实际案例bug</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-Context的继承关系"><span class="nav-number">1.</span> <span class="nav-text">1.1 Context的继承关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-Context的应用场景"><span class="nav-number">2.</span> <span class="nav-text">1.2 Context的应用场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-使用Application时的注意事项"><span class="nav-number">3.</span> <span class="nav-text">1.3 使用Application时的注意事项</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-装饰者模式"><span class="nav-number">4.</span> <span class="nav-text">2.装饰者模式</span></a></li></ol></div>
             
 
           </div>
