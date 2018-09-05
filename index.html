@@ -932,7 +932,7 @@ Window叫做窗口，本质上就是承载view的载体  参考资料 Android艺
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://igding.github.io/2018/08/20/分类整理layout布局文件/">
+    <link itemprop="mainEntityOfPage" href="https://igding.github.io/2018/08/20/进制的转换与计算以及BigDecimal源码分析/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="igding">
@@ -951,7 +951,7 @@ Window叫做窗口，本质上就是承载view的载体  参考资料 Android艺
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/08/20/分类整理layout布局文件/" itemprop="url">分类整理layout布局文件</a></h1>
+                <a class="post-title-link" href="/2018/08/20/进制的转换与计算以及BigDecimal源码分析/" itemprop="url">进制的转换与计算以及BigDecimal源码分析</a></h1>
         
 
         <div class="post-meta">
@@ -995,7 +995,7 @@ Window叫做窗口，本质上就是承载view的载体  参考资料 Android艺
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  368
+                  2,343
                 </span>
               
 
@@ -1011,7 +1011,7 @@ Window叫做窗口，本质上就是承载view的载体  参考资料 Android艺
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  1
+                  10
                 </span>
               
             </div>
@@ -1035,24 +1035,27 @@ Window叫做窗口，本质上就是承载view的载体  参考资料 Android艺
         
           
           
-对于强迫症患者来说，一大堆拥挤的xml文件，肯定是让人看的不舒服的，学习到一种有效管理xml的方式，供参考
+我们都知道，计算机内部是通过二进制来进行计算，他无法识别二进制数据以外的任何数据
 
+首先列举五个简单的Demo
+一：
+   int a = 3;
+   int b = 4;
+   a / b;
+   //0
 
-其实就是七个步骤
+二：
+   double (a / b);
+   //0.0
 
-切换Project
-
-原有的layout文件都备份到其他文件夹，并删除
-
-New ==&gt; directory 创建立一级目录 命名无所谓，但是要和gradle中的src/main/res下的名字保持一致
-
-创建多个二级目录，同样需要名字保持一致
-
-每个二级目录
+ 三：
+   int a = 3;
+   float b = (float) 4.0;
+   double v = a / 
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/08/20/分类整理layout布局文件/#more" rel="contents">
+            <a class="btn" href="/2018/08/20/进制的转换与计算以及BigDecimal源码分析/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1094,7 +1097,7 @@ New ==&gt; directory 创建立一级目录 命名无所谓，但是要和gradle�
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1142,7 +1145,7 @@ New ==&gt; directory 创建立一级目录 命名无所谓，但是要和gradle�
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-count">21</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1224,7 +1227,7 @@ New ==&gt; directory 创建立一级目录 命名无所谓，但是要和gradle�
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">22.0k</span>
+    <span title="Site words total count">24.4k</span>
   
 </div>
 
