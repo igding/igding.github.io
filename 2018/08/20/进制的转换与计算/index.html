@@ -90,8 +90,8 @@
 
 <meta name="description" content="我们都知道，计算机内部是通过二进制来进行计算，他无法识别二进制数据以外的任何数据  首先列举五个简单的Demo 一：    int a = 3;    int b = 4;    a / b;    //0  二：    double (a / b);    //0.0   三：    int a = 3;    float b = (float) 4.0;    double v = a /">
 <meta property="og:type" content="article">
-<meta property="og:title" content="进制的转换与计算以及BigDecimal源码分析">
-<meta property="og:url" content="https://igding.github.io/2018/08/20/进制的转换与计算以及BigDecimal源码分析/index.html">
+<meta property="og:title" content="进制的转换与计算">
+<meta property="og:url" content="https://igding.github.io/2018/08/20/进制的转换与计算/index.html">
 <meta property="og:site_name" content="igding的博客">
 <meta property="og:description" content="我们都知道，计算机内部是通过二进制来进行计算，他无法识别二进制数据以外的任何数据  首先列举五个简单的Demo 一：    int a = 3;    int b = 4;    a / b;    //0  二：    double (a / b);    //0.0   三：    int a = 3;    float b = (float) 4.0;    double v = a /">
 <meta property="og:locale" content="zh-Hans">
@@ -106,9 +106,9 @@
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3117705-6922e39f1357bfe9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3117705-6922e39f1357bfe9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3117705-7bac99ca67ce0848.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2018-09-05T17:59:22.254Z">
+<meta property="og:updated_time" content="2018-09-08T07:42:06.990Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="进制的转换与计算以及BigDecimal源码分析">
+<meta name="twitter:title" content="进制的转换与计算">
 <meta name="twitter:description" content="我们都知道，计算机内部是通过二进制来进行计算，他无法识别二进制数据以外的任何数据  首先列举五个简单的Demo 一：    int a = 3;    int b = 4;    a / b;    //0  二：    double (a / b);    //0.0   三：    int a = 3;    float b = (float) 4.0;    double v = a /">
 <meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/3117705-0f628d9b5bcc5d81.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 
@@ -140,13 +140,13 @@
 
 
 
-  <link rel="canonical" href="https://igding.github.io/2018/08/20/进制的转换与计算以及BigDecimal源码分析/">
+  <link rel="canonical" href="https://igding.github.io/2018/08/20/进制的转换与计算/">
 
 
 
 
 
-  <title>进制的转换与计算以及BigDecimal源码分析 | igding的博客</title>
+  <title>进制的转换与计算 | igding的博客</title>
   
 
 
@@ -303,7 +303,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://igding.github.io/2018/08/20/进制的转换与计算以及BigDecimal源码分析/">
+    <link itemprop="mainEntityOfPage" href="https://igding.github.io/2018/08/20/进制的转换与计算/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="igding">
@@ -320,7 +320,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">进制的转换与计算以及BigDecimal源码分析</h1>
+          <h1 class="post-title" itemprop="name headline">进制的转换与计算</h1>
         
 
         <div class="post-meta">
@@ -369,7 +369,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  2,343
+                  2,273
                 </span>
               
 
@@ -556,8 +556,6 @@ public static double round(double v,int scale){
   }
 };
 </code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">举一个我们项目遇到的真实问题</span><br><span class="line">一件商品的价格是10.5449万元RMB</span><br><span class="line">业务上如果要保留两位小数，四舍五入，显示就是10.54万元。</span><br><span class="line">就会造成一个问题，用户在线下进行实际购买时，会多出49元，那用户肯定是不乐意的。</span><br><span class="line">如果UI上显示&quot;约10.54&quot;，那也不太好，用户心理不平衡。</span><br><span class="line">所以这里的最佳业务就是 小数点第三位大于0，则进一位。</span><br><span class="line">利用BigDecimal也可以完成。</span><br></pre></td></tr></table></figure>
-<h3 id="BigDecimal源码分析"><a href="#BigDecimal源码分析" class="headerlink" title="BigDecimal源码分析"></a>BigDecimal源码分析</h3><p>我们作为猿，不能够仅仅停留在使用api的程度上，尽可能多的去了解其内部原理是什么。</p>
-<p>那么，我们以常用的加减乘除来作为入口，去分析一些基本常用api源码。</p>
       
     </div>
     
@@ -624,7 +622,7 @@ public static double round(double v,int scale){
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://igding.github.io/2018/08/20/进制的转换与计算以及BigDecimal源码分析/" title="进制的转换与计算以及BigDecimal源码分析">https://igding.github.io/2018/08/20/进制的转换与计算以及BigDecimal源码分析/</a>
+    <a href="https://igding.github.io/2018/08/20/进制的转换与计算/" title="进制的转换与计算">https://igding.github.io/2018/08/20/进制的转换与计算/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>
@@ -802,7 +800,7 @@ public static double round(double v,int scale){
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#进制转换问题"><span class="nav-number">1.</span> <span class="nav-text">进制转换问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-十进制转换成二进制"><span class="nav-number">1.1.</span> <span class="nav-text">1 十进制转换成二进制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-十进制转二进制-整数型"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.1 十进制转二进制(整数型)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-十进制转二进制-小数型"><span class="nav-number">1.1.2.</span> <span class="nav-text">1.2 十进制转二进制(小数型)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-二进制转十进制"><span class="nav-number">1.2.</span> <span class="nav-text">2 二进制转十进制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-二进制转换十进制-整数"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1 二进制转换十进制(整数)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2二进制转换十进制-小数"><span class="nav-number">1.2.2.</span> <span class="nav-text">2.2二进制转换十进制(小数)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-二进制的运算方法"><span class="nav-number">1.3.</span> <span class="nav-text">3 二进制的运算方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-加法"><span class="nav-number">1.3.1.</span> <span class="nav-text">3.1 加法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-减法"><span class="nav-number">1.3.2.</span> <span class="nav-text">3.2 减法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-乘法-参考十进制的乘法"><span class="nav-number">1.3.3.</span> <span class="nav-text">3.3 乘法(参考十进制的乘法)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-4-除法-参考十进制的除法"><span class="nav-number">1.3.4.</span> <span class="nav-text">3.4 除法(参考十进制的除法)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#题目讲解"><span class="nav-number">1.4.</span> <span class="nav-text">题目讲解</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Demo1"><span class="nav-number">1.4.1.</span> <span class="nav-text">Demo1</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Demo2"><span class="nav-number">1.4.2.</span> <span class="nav-text">Demo2</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Demo3"><span class="nav-number">1.4.3.</span> <span class="nav-text">Demo3</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Demo4"><span class="nav-number">1.4.4.</span> <span class="nav-text">Demo4</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Demo5"><span class="nav-number">1.4.5.</span> <span class="nav-text">Demo5</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#注意事项："><span class="nav-number">1.5.</span> <span class="nav-text">注意事项：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BigDecimal简易封装代码"><span class="nav-number">1.6.</span> <span class="nav-text">BigDecimal简易封装代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BigDecimal源码分析"><span class="nav-number">1.7.</span> <span class="nav-text">BigDecimal源码分析</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#进制转换问题"><span class="nav-number">1.</span> <span class="nav-text">进制转换问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-十进制转换成二进制"><span class="nav-number">1.1.</span> <span class="nav-text">1 十进制转换成二进制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-十进制转二进制-整数型"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.1 十进制转二进制(整数型)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-十进制转二进制-小数型"><span class="nav-number">1.1.2.</span> <span class="nav-text">1.2 十进制转二进制(小数型)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-二进制转十进制"><span class="nav-number">1.2.</span> <span class="nav-text">2 二进制转十进制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-二进制转换十进制-整数"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1 二进制转换十进制(整数)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2二进制转换十进制-小数"><span class="nav-number">1.2.2.</span> <span class="nav-text">2.2二进制转换十进制(小数)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-二进制的运算方法"><span class="nav-number">1.3.</span> <span class="nav-text">3 二进制的运算方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-加法"><span class="nav-number">1.3.1.</span> <span class="nav-text">3.1 加法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-减法"><span class="nav-number">1.3.2.</span> <span class="nav-text">3.2 减法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-乘法-参考十进制的乘法"><span class="nav-number">1.3.3.</span> <span class="nav-text">3.3 乘法(参考十进制的乘法)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-4-除法-参考十进制的除法"><span class="nav-number">1.3.4.</span> <span class="nav-text">3.4 除法(参考十进制的除法)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#题目讲解"><span class="nav-number">1.4.</span> <span class="nav-text">题目讲解</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Demo1"><span class="nav-number">1.4.1.</span> <span class="nav-text">Demo1</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Demo2"><span class="nav-number">1.4.2.</span> <span class="nav-text">Demo2</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Demo3"><span class="nav-number">1.4.3.</span> <span class="nav-text">Demo3</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Demo4"><span class="nav-number">1.4.4.</span> <span class="nav-text">Demo4</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Demo5"><span class="nav-number">1.4.5.</span> <span class="nav-text">Demo5</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#注意事项："><span class="nav-number">1.5.</span> <span class="nav-text">注意事项：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BigDecimal简易封装代码"><span class="nav-number">1.6.</span> <span class="nav-text">BigDecimal简易封装代码</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -840,7 +838,7 @@ public static double round(double v,int scale){
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">24.4k</span>
+    <span title="Site words total count">24.3k</span>
   
 </div>
 
