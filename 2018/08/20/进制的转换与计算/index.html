@@ -106,7 +106,7 @@
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3117705-6922e39f1357bfe9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3117705-6922e39f1357bfe9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3117705-7bac99ca67ce0848.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2018-09-08T07:42:06.990Z">
+<meta property="og:updated_time" content="2018-09-08T07:43:52.530Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="进制的转换与计算">
 <meta name="twitter:description" content="我们都知道，计算机内部是通过二进制来进行计算，他无法识别二进制数据以外的任何数据  首先列举五个简单的Demo 一：    int a = 3;    int b = 4;    a / b;    //0  二：    double (a / b);    //0.0   三：    int a = 3;    float b = (float) 4.0;    double v = a /">
@@ -369,7 +369,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  2,273
+                  2,224
                 </span>
               
 
@@ -385,7 +385,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  10
+                  9
                 </span>
               
             </div>
@@ -479,7 +479,7 @@ private Arith(){
  * 提供精确的加法运算。
  * @param v1 被加数
  * @param v2 加数
- * [@return](http://my.oschina.net/u/556800) 两个参数的和
+ * 两个参数的和
  */
 public static double add(double v1,double v2){
     BigDecimal b1 = new BigDecimal(Double.toString(v1));
@@ -490,7 +490,7 @@ public static double add(double v1,double v2){
  * 提供精确的减法运算。
  * @param v1 被减数
  * @param v2 减数
- * [@return](http://my.oschina.net/u/556800) 两个参数的差
+ *  两个参数的差
  */
 public static double sub(double v1,double v2){
     BigDecimal b1 = new BigDecimal(Double.toString(v1));
@@ -501,7 +501,7 @@ public static double sub(double v1,double v2){
  * 提供精确的乘法运算。
  * @param v1 被乘数
  * @param v2 乘数
- * [@return](http://my.oschina.net/u/556800) 两个参数的积
+ * 两个参数的积
  */
 public static double mul(double v1,double v2){
     BigDecimal b1 = new BigDecimal(Double.toString(v1));
@@ -514,7 +514,7 @@ public static double mul(double v1,double v2){
  * 小数点以后10位，以后的数字四舍五入。
  * @param v1 被除数
  * @param v2 除数
- * [@return](http://my.oschina.net/u/556800) 两个参数的商
+ *  两个参数的商
  */
 public static double div(double v1,double v2){
     return div(v1,v2,DEF_DIV_SCALE);
@@ -526,7 +526,7 @@ public static double div(double v1,double v2){
  * @param v1 被除数
  * @param v2 除数
  * @param scale 表示表示需要精确到小数点以后几位。
- * [@return](http://my.oschina.net/u/556800) 两个参数的商
+ * 两个参数的商
  */
 public static double div(double v1,double v2,int scale){
     if(scale&lt;0){
@@ -542,7 +542,7 @@ public static double div(double v1,double v2,int scale){
  * 提供精确的小数位四舍五入处理。
  * @param v 需要四舍五入的数字
  * @param scale 小数点后保留几位
- * [@return](http://my.oschina.net/u/556800) 四舍五入后的结果
+ * 四舍五入后的结果
  */
 public static double round(double v,int scale){
 
@@ -555,7 +555,14 @@ public static double round(double v,int scale){
     return b.divide(one,scale,BigDecimal.ROUND_HALF_UP).doubleValue();
   }
 };
-</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">举一个我们项目遇到的真实问题</span><br><span class="line">一件商品的价格是10.5449万元RMB</span><br><span class="line">业务上如果要保留两位小数，四舍五入，显示就是10.54万元。</span><br><span class="line">就会造成一个问题，用户在线下进行实际购买时，会多出49元，那用户肯定是不乐意的。</span><br><span class="line">如果UI上显示&quot;约10.54&quot;，那也不太好，用户心理不平衡。</span><br><span class="line">所以这里的最佳业务就是 小数点第三位大于0，则进一位。</span><br><span class="line">利用BigDecimal也可以完成。</span><br></pre></td></tr></table></figure>
+</code></pre><pre><code>举一个我们项目遇到的真实问题
+一件商品的价格是10.5449万元RMB
+业务上如果要保留两位小数，四舍五入，显示就是10.54万元。
+就会造成一个问题，用户在线下进行实际购买时，会多出49元，那用户肯定是不乐意的。
+如果UI上显示&quot;约10.54&quot;，那也不太好，用户心理不平衡。
+所以这里的最佳业务就是 小数点第三位大于0，则进一位。
+利用BigDecimal也可以完成。
+</code></pre>
       
     </div>
     
