@@ -99,7 +99,7 @@
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3117705-dc8476b0f7dcd5cd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3117705-703cdaf28e76cdd0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3117705-15db2461fdfea3df.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2018-09-04T15:52:50.820Z">
+<meta property="og:updated_time" content="2018-09-19T05:54:57.347Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="关于联网检测广播中弹窗所引发的思考">
 <meta name="twitter:description" content="一个单独的知识点，肯定是没多大用，但是以这个点为圆心，深入其原理，并且扩展到其他知识点以及各自的用法区别含义，长此以往，不断的整理出自己的知识体系，雪球越滚越大，将会非常有用。  BroadCastReceiver中弹出dialog，这种现象所涉及到的知识点   本文大体上分为11个部分分别如下加上xml图。最好是有uml分析的流程图。 1.广播的工作流程2.intentFilter匹配规则和i">
@@ -362,7 +362,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,427
+                  1,442
                 </span>
               
 
@@ -413,6 +413,7 @@
 <h2 id="4-从设计的角度"><a href="#4-从设计的角度" class="headerlink" title="4.从设计的角度"></a>4.从设计的角度</h2><p>为什么现在的APP都不这样设计了<br>例如微信QQ淘宝百度，当用户没有网络时，仅仅只是一个toast，而不显示弹窗提示用户去设置联网。</p>
 <h3 id="4-1-从设计的角度来考虑"><a href="#4-1-从设计的角度来考虑" class="headerlink" title="4.1 从设计的角度来考虑"></a>4.1 从设计的角度来考虑</h3><p>多半是因为 用户习惯问题，因为一般用户看到没有网时，都会下滑手机屏幕，打开WiFi或者数据，而不是点到设置，再进行弹窗。</p>
 <h3 id="4-2-从开发的角度考虑"><a href="#4-2-从开发的角度考虑" class="headerlink" title="4.2 从开发的角度考虑"></a>4.2 从开发的角度考虑</h3><p>部分厂商的”设置wifi”界面的路径不一样，就会存在兼容性问题<br>解决办法：下载顶部activity软件，知道手机的路径后用隐式intent去打开。</p>
+<p>如果争执不下的话，可以做<a href="https://blog.csdn.net/hackeey/article/details/78016979" target="_blank" rel="noopener">数据埋点</a></p>
 <h2 id="5-关于网络的util"><a href="#5-关于网络的util" class="headerlink" title="5.关于网络的util"></a>5.关于<a href="https://github.com/Blankj/AndroidUtilCode/blob/master/utilcode/src/main/java/com/blankj/utilcode/util/NetworkUtils.java" target="_blank" rel="noopener">网络的util</a></h2><p><img src="https://upload-images.jianshu.io/upload_images/3117705-703cdaf28e76cdd0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="优化的部分"></p>
 <h2 id="6-关于Context以及对应的设计模式"><a href="#6-关于Context以及对应的设计模式" class="headerlink" title="6.关于Context以及对应的设计模式"></a>6.关于<a href="https://igding.github.io/2018/09/04/Context%E4%BB%A5%E5%8F%8A%E8%A3%85%E9%A5%B0%E8%80%85%E6%A8%A1%E5%BC%8F/">Context以及对应的设计模式</a></h2><h2 id="7-DialogFragment的封装以及涉及到的builder模式"><a href="#7-DialogFragment的封装以及涉及到的builder模式" class="headerlink" title="7.DialogFragment的封装以及涉及到的builder模式"></a>7.<a href="https://github.com/igding/baseDialog" target="_blank" rel="noopener">DialogFragment的封装以及涉及到的builder模式</a></h2><h2 id="8-管理xml文件"><a href="#8-管理xml文件" class="headerlink" title="8.管理xml文件"></a>8.<a href="https://igding.github.io/2018/08/20/%E5%88%86%E7%B1%BB%E6%95%B4%E7%90%86layout%E5%B8%83%E5%B1%80%E6%96%87%E4%BB%B6/">管理xml文件</a></h2><h2 id="9-序列化"><a href="#9-序列化" class="headerlink" title="9. 序列化"></a>9. <a href="https://igding.github.io/2018/08/19/%E5%BA%8F%E5%88%97%E5%8C%96%E5%92%8C%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">序列化</a></h2><p>dialog在封装的过程中，会遇到序列化的问题</p>
 <h2 id="10-适配"><a href="#10-适配" class="headerlink" title="10 适配"></a>10 <a href="">适配</a></h2><p>还有涉及到适配的问题。需要自己弄一套适配的sw和获取屏幕各种玩意的utils，去替换项目中的零散代码。</p>
@@ -624,7 +625,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-count">22</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -708,7 +709,7 @@
 <div class="copyright">
 
 &copy; 
-<span itemprop="copyrightYear">2018</span>
+<span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
@@ -722,7 +723,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">24.3k</span>
+    <span title="Site words total count">26.0k</span>
   
 </div>
 
